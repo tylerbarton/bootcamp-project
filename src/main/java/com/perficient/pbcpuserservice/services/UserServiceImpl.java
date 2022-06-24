@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto getUserById(Long userId) {
-        List<User> users = userRepository.findAllByUserId(userId);
+        List<User> users = userRepository.findAllById(userId);
         if(users == null || users.isEmpty()){
             log.warn("Failed to retrieve user " + userId);
             throw new NotFoundException("User not found");
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         if(userDto == null) {
             throw new NullArgumentException("userDto");
         }
-        List<User> users = userRepository.findAllByUserId(userId);
+        List<User> users = userRepository.findAllById(userId);
 
         if(users == null || users.size() == 0) {
             throw new NotFoundException("User " + userId + " not found");
