@@ -15,4 +15,6 @@ public interface UserRepository extends MongoRepository<User, Long> {
 
     @Query("{'isDeleted': true}")
     void softDeleteById(Long userId);
+
+    List<User> findAllByUserId(Long userId);
 }
