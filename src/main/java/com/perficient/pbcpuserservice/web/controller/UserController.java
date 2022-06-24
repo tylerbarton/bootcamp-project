@@ -15,6 +15,7 @@ import java.util.List;
  * @version 1.0, 6/23/2022
  * @project PBCP-UserService
  */
+@RestController
 @RequestMapping("${service.api_path}")
 public class UserController {
 
@@ -50,16 +51,16 @@ public class UserController {
     }
 
     /**
-     * Delete a user by id
+     * Delete a user by id with the option of a hard or soft delete (soft delete is default).
      * @param userId the user id
      * @return a 204 (NO CONTENT) status if successful else 404 (Not Found)
      */
     @DeleteMapping("/{userId}")
-    public ResponseEntity deleteUser(@PathVariable("userId") Long userId){
+    public ResponseEntity deleteUser(@PathVariable("userId") Long userId, @RequestParam(value = "hardDelete", defaultValue = "false") boolean hardDelete){
         if (userService.getUserById(userId) == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        userService.deleteUser(userId);
+        userService.deleteUser(userId, hardDelete);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -82,7 +83,7 @@ public class UserController {
      * Update an existing user
      * @param userId the user id
      * @param userDto the new user information
-     * @return a 201 (CREATED) status if successful else 404 (Not Found)
+     * @return a 200 (OK) status if successful else 404 (Not Found)
      */
     @PutMapping("/{userId}")
     public ResponseEntity updateUser(@PathVariable("userId") Long userId, @RequestBody @Validated UserDto userDto) throws Throwable {
@@ -92,5 +93,4 @@ public class UserController {
         }
         return new ResponseEntity<>(savedDto, HttpStatus.OK);
     }
-
 }
