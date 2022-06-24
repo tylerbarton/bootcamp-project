@@ -11,7 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 //@Table("users") // MySQL table name
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "${spring.data.mongodb.collection}") // MongoDB collection name
