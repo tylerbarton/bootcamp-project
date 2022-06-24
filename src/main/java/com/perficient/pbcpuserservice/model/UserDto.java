@@ -3,6 +3,7 @@ package com.perficient.pbcpuserservice.model;
 import com.perficient.pbcpuserservice.domain.EmailAddress;
 import com.perficient.pbcpuserservice.domain.PhoneNumber;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserDto {
     private Long id;
     private String firstName;
