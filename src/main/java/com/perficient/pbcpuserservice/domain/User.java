@@ -1,26 +1,20 @@
 package com.perficient.pbcpuserservice.domain;
 
-import org.hibernate.sql.ordering.antlr.Node;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.cassandra.core.mapping.Table;
-
-import javax.persistence.*;
-import java.util.Set;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author tyler.barton
  * @version 1.0, 6/23/2022
  * @project PBCP-UserService
  */
-@Entity
-@Table("users")
+//@Table("users") // MySQL table name
+@Document("users") // MongoDb document name
 public class User extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
-    @ElementCollection
     private EmailAddress[] emailAddress;
     private PhoneNumber[] phoneNumber;
 }

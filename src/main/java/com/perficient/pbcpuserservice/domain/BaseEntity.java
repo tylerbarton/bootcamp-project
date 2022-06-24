@@ -12,11 +12,10 @@ import javax.persistence.Id;
  * @version 1.0, 6/24/2022
  * @project PBCP-UserService
  */
-@Entity
 public class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private boolean deleted;
+    private boolean isDeleted; // soft delete
 }
