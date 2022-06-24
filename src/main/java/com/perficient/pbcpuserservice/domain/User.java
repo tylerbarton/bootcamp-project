@@ -1,5 +1,8 @@
 package com.perficient.pbcpuserservice.domain;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,12 +12,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @project PBCP-UserService
  */
 //@Table("users") // MySQL table name
-@Document("users") // MongoDb document name
+@Getter
+@Setter
+@Document(collection = "users") // MongoDB collection name
 public class User extends BaseEntity {
     @Id
     private Long id;
     private String firstName;
     private String lastName;
+    private String gender;
+    private int age;
     private EmailAddress[] emailAddress;
     private PhoneNumber[] phoneNumber;
 }
