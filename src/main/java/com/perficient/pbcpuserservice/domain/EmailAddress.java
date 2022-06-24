@@ -10,4 +10,5 @@ public class EmailAddress {
 
     private String address;
     private String type;
+//    private boolean primary;
 }
