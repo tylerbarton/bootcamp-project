@@ -21,10 +21,12 @@ public interface UserMapper {
     List<UserDto> toDtos(List<User> users);
     List<User> fromDtos(List<UserDto> dtos);
 
-    @Mapping(source="userDto.userId", target="userId")
+    @Mapping(source="userDto.id", target="id")
     @Mapping(source="userDto.firstName", target="firstName")
     @Mapping(source="userDto.lastName", target="lastName")
     @Mapping(source="userDto.age", target="age")
     @Mapping(source="userDto.gender", target="gender")
+    @Mapping(source="userDto.emailAddress", target="emailAddress")
+    @Mapping(source="userDto.phoneNumber", target="phoneNumber")
     User updateUser(User user, UserDto userDto);
 }
