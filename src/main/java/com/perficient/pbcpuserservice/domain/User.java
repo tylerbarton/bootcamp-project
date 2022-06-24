@@ -1,8 +1,6 @@
 package com.perficient.pbcpuserservice.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -14,6 +12,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Document(collection = "${spring.data.mongodb.collection}") // MongoDB collection name
 public class User extends BaseEntity {
     private String firstName;
