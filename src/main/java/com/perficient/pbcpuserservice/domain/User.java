@@ -16,8 +16,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @Document(collection = "users") // MongoDB collection name
 public class User extends BaseEntity {
-    @Id
-    private Long id;
     private String firstName;
     private String lastName;
     private String gender;
