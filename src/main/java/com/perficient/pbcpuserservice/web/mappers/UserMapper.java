@@ -13,7 +13,7 @@ import java.util.List;
  * @version 1.0, 6/17/2022
  * @project perf-bootcamp-project
  */
-@Mapper(componentModel = "spring")
+@Mapper()
 public interface UserMapper {
     UserDto toDto(User user);
     User fromDto(UserDto dto);
