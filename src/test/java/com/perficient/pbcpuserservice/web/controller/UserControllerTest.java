@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.then;
@@ -242,7 +243,7 @@ class UserControllerTest {
         mockMvc.perform(post("/api/v1/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(dtoJson))
-//                .andExpect(result -> assertTrue(result.getResponse().getContentAsString().contains("ConstraintViolationException")))
+                .andExpect(result -> assertTrue(result.getResponse().getContentAsString().contains("Validation failed")))
                 .andExpect(status().isBadRequest());
     }
 

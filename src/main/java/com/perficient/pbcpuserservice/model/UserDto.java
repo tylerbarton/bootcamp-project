@@ -6,7 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.validation.constraints.*;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 /**
  * @author tyler.barton
@@ -17,7 +21,7 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserDto {
+public class UserDto implements Serializable {
     private Long id;
     @NotBlank
     @Size(max=45)

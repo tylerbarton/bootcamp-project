@@ -17,6 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("${service.api.path}")
+@Validated
 public class UserController {
 
     @Autowired
@@ -71,7 +72,8 @@ public class UserController {
      * @return a 201 (CREATED) status if successful else 400 (Bad Request)
      */
     @PostMapping(consumes={"application/json"})
-    public ResponseEntity createUser(@RequestBody @Validated UserDto userDto) {
+    public ResponseEntity createUser(@Validated @RequestBody UserDto userDto) {
+        System.out.println("Add userDto: " + userDto);
         UserDto savedDto = userService.createNewUser(userDto);
         if (savedDto == null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
