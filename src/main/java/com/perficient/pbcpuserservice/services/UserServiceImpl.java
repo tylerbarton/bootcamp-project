@@ -8,8 +8,8 @@ import com.perficient.pbcpuserservice.web.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.NullArgumentException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,7 +27,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
-    @Autowired
     private final UserRepository userRepository;
 
     /**
@@ -44,6 +43,11 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = users.get(0);
+        if(user.isDeleted()){
+            log.warn("Attempted to retrieve deleted user " + userId);
+            throw new NotFoundException("User not found");
+        }
+
         log.debug("Successfully retrieved user " + user.getId());
         return userMapper.toDto(user);
     }
@@ -53,6 +57,7 @@ public class UserServiceImpl implements UserService {
      * @param userDto input dto to save
      * @return populated userDto.
      */
+    @Transactional
     @Override
     public UserDto createNewUser(UserDto userDto) {
         if(userDto == null) {
@@ -60,7 +65,8 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userMapper.fromDto(userDto);
-        return userMapper.toDto(userRepository.save(user));
+        User savedUser = userRepository.save(user);
+        return userMapper.toDto(savedUser);
     }
 
     /**
@@ -86,16 +92,44 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Delete user from the database
+     * Delete user from the database either hard or soft.
      * @param userId id of the user
+     * @param hardDelete if true, delete user from the database. If false, set user to inactive.
      */
     @Override
     public void deleteUser(Long userId, boolean hardDelete) {
         if(hardDelete) {
-            userRepository.deleteById(userId);
+            hardDeleteById(userId);
         } else {
-            userRepository.softDeleteById(userId);
+            softDeleteById(userId);
         }
+    }
+
+    /**
+     * Changes the user status to deleted
+     * @param userId id of the user
+     */
+    private void softDeleteById(Long userId) {
+        List<User> users = userRepository.findAllById(userId);
+        if(users == null || users.isEmpty()) {
+            throw new NotFoundException("User " + userId + " not found");
+        }
+        userRepository.findAllById(userId).forEach(user -> {
+            user.setDeleted(true);
+            userRepository.save(user);
+        });
+
+//        userRepository.findById(userId).ifPresent(user -> {
+//            user.setDeleted(true);
+//            userRepository.save(user);
+//        });
+    }
+
+    /**
+     * Hard deletes the user from the database
+     */
+    private void hardDeleteById(Long userId) {
+        userRepository.deleteById(userId);
     }
 
     /**
@@ -104,6 +138,21 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserDto> listUsers() {
-        return userMapper.toDtos(userRepository.findAll());
+        return userMapper.toDtos(userRepository.findAllAndDeletedIsFalse());
+    }
+
+    /**
+     * Check if user is deleted
+     * @param userId id of the user
+     * @return true if user is deleted
+     */
+    @Override
+    public boolean isUserDeleted(Long userId) {
+        List<User> users = userRepository.findAllByIdAndDeleted(userId, true);
+        if(users == null || users.isEmpty()){
+            return false;
+        }
+        User user = users.get(0);
+        return true;
     }
 }

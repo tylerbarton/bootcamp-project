@@ -1,6 +1,5 @@
 package com.perficient.pbcpuserservice.services;
 
-import com.perficient.pbcpuserservice.domain.User;
 import com.perficient.pbcpuserservice.model.UserDto;
 
 import java.util.List;
@@ -22,4 +21,6 @@ public interface UserService {
     void deleteUser(Long userId, boolean hardDelete);
 
     List<UserDto> listUsers();
+
+    boolean isUserDeleted(Long userId);
 }
