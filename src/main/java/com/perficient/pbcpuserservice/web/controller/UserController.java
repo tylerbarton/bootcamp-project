@@ -55,6 +55,7 @@ public class UserController {
      * Delete a user by id with the option of a hard or soft delete (soft delete is default).
      * @param userId the user id
      * @return a 204 (NO CONTENT) status if successful else 404 (Not Found)
+     * @apiNote example call: delete http://localhost:8080/api/v1/user/1?hardDelete=true
      */
     @DeleteMapping("/{userId}")
     public ResponseEntity deleteUser(@PathVariable("userId") Long userId, @RequestParam(value = "hardDelete", defaultValue = "false") boolean hardDelete){
@@ -73,7 +74,6 @@ public class UserController {
      */
     @PostMapping(consumes={"application/json"})
     public ResponseEntity createUser(@Validated @RequestBody UserDto userDto) {
-        System.out.println("Add userDto: " + userDto);
         UserDto savedDto = userService.createNewUser(userDto);
         if (savedDto == null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
