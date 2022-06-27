@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.validation.constraints.*;
 
 /**
  * @author tyler.barton
@@ -18,10 +19,18 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserDto {
     private Long id;
+    @NotBlank
+    @Size(max=45)
     private String firstName;
+    @NotBlank
+    @Size(max=45)
     private String lastName;
+    @NotBlank
     private String gender;
+    @PositiveOrZero
     private int age;
+//    @Pattern(regexp = EmailAddress.EMAIL_ADDRESS_REGEX)
     private EmailAddress[] emailAddress;
+//    @Pattern(regexp = PhoneNumber.PHONE_NUMBER_REGEX)
     private PhoneNumber[] phoneNumber;
 }

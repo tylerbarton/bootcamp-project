@@ -3,8 +3,15 @@ package com.perficient.pbcpuserservice.web.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.perficient.pbcpuserservice.model.UserDto;
 import com.perficient.pbcpuserservice.services.UserService;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -181,4 +189,69 @@ class UserControllerTest {
                         .content(dtoJson))
                 .andExpect(status().isBadRequest());
     }
+
+    /**
+     * Contains the parameters to test createUser with that violate the constraints of the dto.
+     */
+    static class PostTestConstraintArgumentsProvider implements ArgumentsProvider{
+
+        /**
+         * Valid dto to test with
+         * @return a correctly populated dto
+         */
+        private UserDto model(){
+            UserDto model = new UserDto();
+            model.setId(0L);
+            model.setFirstName("John");
+            model.setLastName("Smith");
+            model.setAge(57);
+            model.setGender("M");
+            model.setEmailAddress(null);
+            model.setPhoneNumber(null);
+            return model;
+        }
+
+        @Override
+        public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) throws Exception {
+            return Stream.of(
+                    // firstName exceeds length
+                    Arguments.of(new UserDto(0L, "Johnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn", "Smith", "M", 57, null, null)),
+                    // lastName exceeds length
+                    Arguments.of(new UserDto(0L, "John", "1234567890123456789012345678901234567890123w4e56789012345678901234567890", "M", 57, null, null)),
+                    // age is negative
+                    Arguments.of(new UserDto(0L, "John", "Smith", "M", -1, null, null)),
+                    // first name is null
+                    Arguments.of(new UserDto(0L, null, "Smith", "M", 57, null, null)),
+                    // last name is null
+                    Arguments.of(new UserDto(0L, "John", null, "M", 57, null, null)),
+                    // first name is blank
+                    Arguments.of(new UserDto(0L, "", "Smith", "M", 57, null, null))
+            );
+        }
+    }
+
+    /**
+     * Test creating a user with different fields than the model
+     * @throws Exception
+     */
+    @DisplayName("Test that the controller is wired up correctly")
+    @ParameterizedTest(name = "{index}: {0}")
+    @ArgumentsSource(PostTestConstraintArgumentsProvider.class)
+    void createUser_Constraint_Violation(UserDto dto) throws ConstraintViolationException, Exception {
+        String dtoJson = objectMapper.writeValueAsString(dto);
+        mockMvc.perform(post("/api/v1/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dtoJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createUser_Internal_Server_Exception() throws Exception {
+        String dtoJson = objectMapper.writeValueAsString("object");
+        mockMvc.perform(post("/api/v1/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dtoJson))
+                .andExpect(status().isInternalServerError());
+    }
+
 }
