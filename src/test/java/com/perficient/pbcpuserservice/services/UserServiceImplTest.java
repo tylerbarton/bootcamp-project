@@ -1,5 +1,7 @@
 package com.perficient.pbcpuserservice.services;
 
+import com.perficient.pbcpuserservice.domain.EmailAddress;
+import com.perficient.pbcpuserservice.domain.PhoneNumber;
 import com.perficient.pbcpuserservice.domain.User;
 import com.perficient.pbcpuserservice.model.UserDto;
 import com.perficient.pbcpuserservice.repository.UserRepository;
@@ -45,6 +47,20 @@ class UserServiceImplTest {
         user.setLastName("Smith");
         user.setAge(57);
         user.setGender("male");
+        return user;
+    }
+
+    User getValidUserWithEmailAndPhone(){
+        EmailAddress emailAddress = new EmailAddress("hello@world.com", "primary");
+        PhoneNumber phoneNumber = new PhoneNumber("123-456-7890", "primary");
+        User user = new User();
+        user.setId(USER_ID);
+        user.setFirstName("John");
+        user.setLastName("Smith");
+        user.setAge(57);
+        user.setGender("male");
+        user.setPhoneNumber(new PhoneNumber[]{phoneNumber});
+        user.setEmailAddress(new EmailAddress[]{emailAddress});
         return user;
     }
 
@@ -106,6 +122,24 @@ class UserServiceImplTest {
         assertEquals(user.getLastName(), newUserDto.getLastName());
         assertEquals(user.getAge(), newUserDto.getAge());
         assertEquals(user.getGender(), newUserDto.getGender());
+    }
+
+    @Test
+    void createNewUser_Should_Create_User_With_Email_And_Phone(){
+        // Arrange
+        User user = getValidUserWithEmailAndPhone();
+        UserDto userDto = userMapper.toDto(user);
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        // Act
+        UserDto newUserDto = userService.createNewUser(userDto);
+        // Assert
+        assertEquals(user.getId(), newUserDto.getId());
+        assertEquals(user.getFirstName(), newUserDto.getFirstName());
+        assertEquals(user.getLastName(), newUserDto.getLastName());
+        assertEquals(user.getAge(), newUserDto.getAge());
+        assertEquals(user.getGender(), newUserDto.getGender());
+        assertEquals(user.getEmailAddress()[0].getAddress(), newUserDto.getEmailAddress()[0].getAddress());
+        assertEquals(user.getPhoneNumber()[0].getNumber(), newUserDto.getPhoneNumber()[0].getNumber());
     }
 
     @Test
