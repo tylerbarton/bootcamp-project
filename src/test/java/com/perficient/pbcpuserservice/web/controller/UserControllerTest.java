@@ -3,7 +3,6 @@ package com.perficient.pbcpuserservice.web.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.perficient.pbcpuserservice.model.UserDto;
 import com.perficient.pbcpuserservice.services.UserService;
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author tyler.barton
  */
 @WebMvcTest(UserController.class) // Only intended to test controllers
+
 class UserControllerTest {
     private static String API_URL = "/api/v1/user";
 
@@ -232,19 +232,24 @@ class UserControllerTest {
 
     /**
      * Test creating a user with different fields than the model
-     * @throws Exception
+     * @throws Exception if the test fails
      */
     @DisplayName("Test that the controller is wired up correctly")
     @ParameterizedTest(name = "{index}: {0}")
     @ArgumentsSource(PostTestConstraintArgumentsProvider.class)
-    void createUser_Constraint_Violation(UserDto dto) throws ConstraintViolationException, Exception {
+    void createUser_Constraint_Violation(UserDto dto) throws Exception {
         String dtoJson = objectMapper.writeValueAsString(dto);
         mockMvc.perform(post("/api/v1/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(dtoJson))
+//                .andExpect(result -> assertTrue(result.getResponse().getContentAsString().contains("ConstraintViolationException")))
                 .andExpect(status().isBadRequest());
     }
 
+    /**
+     * Test for misc. exceptions.
+     * @throws Exception if the test fails
+     */
     @Test
     void createUser_Internal_Server_Exception() throws Exception {
         String dtoJson = objectMapper.writeValueAsString("object");

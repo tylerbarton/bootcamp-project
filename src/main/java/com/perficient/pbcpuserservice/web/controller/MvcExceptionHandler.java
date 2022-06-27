@@ -27,6 +27,7 @@ public class MvcExceptionHandler {
 
     /**
      * Catches constraint violations and returns a proper response
+     * @ImplNote: Spring will perform the translation after it is invoked in the transactional method.
      * @param e the exception
      * @return a proper response
      */
@@ -42,6 +43,6 @@ public class MvcExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("Exception Caught:" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
