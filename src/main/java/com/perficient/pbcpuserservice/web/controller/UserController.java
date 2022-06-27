@@ -16,7 +16,7 @@ import java.util.List;
  * @project PBCP-UserService
  */
 @RestController
-@RequestMapping("${service.api_path}")
+@RequestMapping("${service.api.path}")
 public class UserController {
 
     @Autowired
