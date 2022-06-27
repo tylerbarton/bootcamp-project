@@ -6,10 +6,11 @@ import com.perficient.pbcpuserservice.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -18,19 +19,18 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * JUnit 5 unit testing of CRUD actions
  * @author tyler.barton
  */
-@AutoConfigureMockMvc // this is required to use MockMvc
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK) // To fix mongo db connection issue
+@WebMvcTest(UserController.class) // Only intended to test controllers
 class UserControllerTest {
-    private static String API_URL;
+    private static String API_URL = "/api/v1/user";
 
     @Autowired
     public MockMvc mockMvc;
@@ -46,6 +46,7 @@ class UserControllerTest {
      */
     UserDto getValidDto(){
         return UserDto.builder()
+                .id(0L)
                 .firstName("John")
                 .lastName("Smith")
                 .age(57)
@@ -65,46 +66,80 @@ class UserControllerTest {
         return users;
     }
 
+    /**
+     * Sets the property for the dynamic controller mapping url.
+     * @param registry the dynamic property registry
+     */
+    @DynamicPropertySource
+    static void controllerProperties(DynamicPropertyRegistry registry) {
+        registry.add("service.api.path", () -> API_URL);
+    }
+
+    /**
+     * Called before each test
+     * @throws Throwable if an error occurs
+     */
     @BeforeEach
     public void setUp() throws Throwable {
-        API_URL = "http://localhost:8080/api/v1/user/";
-
-        // Stub the dependencies
-        when(userService.getUserById(anyLong())).thenReturn(getValidDto());
-        when(userService.listUsers()).thenReturn(getValidDtos());
-        when(userService.createNewUser(any(UserDto.class))).thenReturn(getValidDto());
-        when(userService.updateUser(anyLong(), any(UserDto.class))).thenReturn(getValidDto());
     }
+
 
     @Test
     void createUser_CREATED() throws Exception {
-        String dtoJson = objectMapper.writeValueAsString(getValidDto());
+        UserDto dto = getValidDto();
+        when(userService.createNewUser(dto)).thenReturn(dto);
+        String dtoJson = objectMapper.writeValueAsString(dto);
 
         mockMvc.perform(post("/api/v1/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(dtoJson))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
-    void getUser_By_Id() throws Exception {
-        // Test
-        mockMvc.perform(get(API_URL + anyLong()).accept(MediaType.APPLICATION_JSON))
+    void getUser_By_Id_OK() throws Exception {
+        UserDto dto = getValidDto();
+        when(userService.getUserById(anyLong())).thenReturn(dto);
+
+        mockMvc.perform(get("/api/v1/user/0").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(0)));
     }
 
     @Test
-    void listUsers() {
+    void listUsers_OK() throws Exception {
+        List<UserDto> savedDtos = new ArrayList<>();
+        savedDtos.add(getValidDto());
+        savedDtos.add(getValidDto());
+        savedDtos.add(getValidDto());
+        when(userService.listUsers()).thenReturn(savedDtos);
+
+        mockMvc.perform(get("/api/v1/user"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
-    void deleteUser() {
+    void deleteUser_NOCONTENT() throws Exception {
+        when(userService.getUserById(anyLong())).thenReturn(getValidDto());
+        mockMvc.perform(delete("/api/v1/user/0"))
+                .andExpect(status().isNoContent());
     }
 
 
     @Test
-    void updateUser() {
+    void updateUser() throws Throwable {
+        UserDto dto = getValidDto();
+        when(userService.updateUser(anyLong(), any(UserDto.class))).thenReturn(dto);
+        String dtoJson = objectMapper.writeValueAsString(dto);
+
+        mockMvc.perform(put("/api/v1/user/" + dto.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dtoJson))
+                .andExpect(status().isOk());
+
+        then(userService).should().updateUser(anyLong(), any(UserDto.class));
     }
 }

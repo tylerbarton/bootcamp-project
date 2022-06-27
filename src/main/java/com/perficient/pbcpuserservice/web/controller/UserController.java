@@ -41,7 +41,7 @@ public class UserController {
      * List all users in the service
      * @return a list of users and 200 (OK) status if successful else 404 (Not Found)
      */
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<List<UserDto>> listUsers(){
         List<UserDto> userDtos = userService.listUsers();
         if(userDtos.isEmpty()){
