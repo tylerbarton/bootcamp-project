@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "${spring.data.mongodb.collection}") // MongoDB collection name
+@Document(collection = "Users") // MongoDB collection name
 public class User extends BaseEntity {
     private String firstName;
     private String lastName;
