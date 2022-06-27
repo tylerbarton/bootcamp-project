@@ -130,7 +130,7 @@ class UserControllerTest {
 
 
     @Test
-    void updateUser() throws Throwable {
+    void updateUser_OK() throws Throwable {
         UserDto dto = getValidDto();
         when(userService.updateUser(anyLong(), any(UserDto.class))).thenReturn(dto);
         String dtoJson = objectMapper.writeValueAsString(dto);
