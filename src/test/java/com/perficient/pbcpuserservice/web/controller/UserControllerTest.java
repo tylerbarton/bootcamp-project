@@ -142,4 +142,43 @@ class UserControllerTest {
 
         then(userService).should().updateUser(anyLong(), any(UserDto.class));
     }
+
+
+    @Test
+    void getUser_By_Id_NOT_FOUND() throws Exception {
+        mockMvc.perform(get("/api/v1/user/0").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void listUsers_NOT_FOUND() throws Exception {
+        mockMvc.perform(get("/api/v1/user"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deleteUser_NOT_FOUND() throws Exception {
+        mockMvc.perform(delete("/api/v1/user/0"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateUser_NOT_FOUND() throws Exception {
+        UserDto dto = getValidDto();
+        String dtoJson = objectMapper.writeValueAsString(dto);
+        mockMvc.perform(put("/api/v1/user/" + dto.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dtoJson))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void createUser_BAD_REQUEST() throws Exception {
+        UserDto dto = getValidDto();
+        String dtoJson = objectMapper.writeValueAsString(dto);
+        mockMvc.perform(post("/api/v1/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dtoJson))
+                .andExpect(status().isBadRequest());
+    }
 }
