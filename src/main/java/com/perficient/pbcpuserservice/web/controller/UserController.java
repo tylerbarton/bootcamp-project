@@ -17,6 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("${service.api.path}")
+@CrossOrigin(origins = "*") // Enables cross-origin requests
 @Validated
 public class UserController {
 
