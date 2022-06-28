@@ -1,0 +1,13 @@
+package com.perficient.pbcpclient;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class PbcpClientApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+
+}
