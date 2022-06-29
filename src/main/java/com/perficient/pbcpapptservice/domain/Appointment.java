@@ -1,7 +1,6 @@
 package com.perficient.pbcpapptservice.domain;
 
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 import java.security.Timestamp;
 import java.time.ZonedDateTime;
@@ -13,7 +12,10 @@ import java.time.ZonedDateTime;
  * @version 1.0, 6/29/2022
  * @project PBCP-ApptService
  */
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Appointment extends BaseEntity {
 
     // Required fields
