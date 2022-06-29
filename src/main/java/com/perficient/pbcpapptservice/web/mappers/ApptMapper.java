@@ -3,6 +3,7 @@ package com.perficient.pbcpapptservice.web.mappers;
 import com.perficient.pbcpapptservice.domain.Appointment;
 import com.perficient.pbcpapptservice.model.AppointmentDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @version 1.0, 6/29/2022
  * @project PBCP-ApptService
  */
-@Mapper(componentModel = "spring", uses = { ApptMapper.class })
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ApptMapper {
     AppointmentDto toDto(Appointment appt);
     Appointment fromDto(AppointmentDto apptDto);
