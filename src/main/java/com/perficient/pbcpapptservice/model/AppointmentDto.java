@@ -3,7 +3,7 @@ package com.perficient.pbcpapptservice.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.security.Timestamp;
+import java.time.ZonedDateTime;
 
 /**
  * Dto for Appointment used by the controller.
@@ -18,7 +18,7 @@ public class AppointmentDto {
     private String name;
     private String type;
     private String description;
-    private Timestamp startTime;
-    private Timestamp endTime;
+    private ZonedDateTime startTime;
+    private ZonedDateTime endTime;
     private Object metaData;
 }

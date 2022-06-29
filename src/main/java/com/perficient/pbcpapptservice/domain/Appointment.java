@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.security.Timestamp;
+import java.time.ZonedDateTime;
 
 /**
  * Contains appointment information for domain usage.
@@ -19,8 +20,8 @@ public class Appointment extends BaseEntity {
     private String name;
     private String type;
     private String description;
-    private Timestamp startTime;
-    private Timestamp endTime;
+    private ZonedDateTime startTime;
+    private ZonedDateTime endTime;
     private Object metaData;
 
     // Additional fields
