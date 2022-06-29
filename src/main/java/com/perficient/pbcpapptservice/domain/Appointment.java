@@ -3,6 +3,8 @@ package com.perficient.pbcpapptservice.domain;
 import lombok.Data;
 import lombok.Getter;
 
+import java.security.Timestamp;
+
 /**
  * Contains appointment information for domain usage.
  *
@@ -17,8 +19,8 @@ public class Appointment extends BaseEntity {
     private String name;
     private String type;
     private String description;
-    private String startTime;
-    private String endTime;
+    private Timestamp startTime;
+    private Timestamp endTime;
     private Object metaData;
 
     // Additional fields
