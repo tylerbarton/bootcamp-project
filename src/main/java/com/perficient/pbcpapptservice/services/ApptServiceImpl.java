@@ -22,11 +22,6 @@ public class ApptServiceImpl implements ApptService {
     private final ApptRepository apptRepository;
 
     @Override
-    public AppointmentDto createAppointment(AppointmentDto appointmentDto) {
-        return apptMapper.toDto(apptRepository.save(apptMapper.fromDto(appointmentDto)));
-    }
-
-    @Override
     public List<AppointmentDto> getAppts() {
         return apptMapper.toDtos(apptRepository.findAppointmentsByDeletedIsFalse());
     }
@@ -53,7 +48,7 @@ public class ApptServiceImpl implements ApptService {
     @Override
     public void cancelAppt(Long id) {
         Appointment appt = apptRepository.findById(id).orElse(null);
-        appt.setStatus(ApptStatus.CANCELLED);
+//        appt.setStatus(ApptStatus.CANCELLED);
         apptRepository.save(appt);
     }
 
@@ -65,14 +60,14 @@ public class ApptServiceImpl implements ApptService {
     @Override
     public void rescheduleAppt(Long id) {
         Appointment appt = apptRepository.findById(id).orElse(null);
-        appt.setStatus(ApptStatus.RESCHEDULED);
+//        appt.setStatus(ApptStatus.RESCHEDULED);
         apptRepository.save(appt);
     }
 
     @Override
     public void completeAppt(Long id) {
         Appointment appt = apptRepository.findById(id).orElse(null);
-        appt.setStatus(ApptStatus.COMPLETED);
+//        appt.setStatus(ApptStatus.COMPLETED);
         apptRepository.save(appt);
     }
 

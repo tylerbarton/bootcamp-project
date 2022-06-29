@@ -10,7 +10,6 @@ import java.util.List;
  * @project PBCP-ApptService
  */
 public interface ApptService {
-public AppointmentDto createAppointment(AppointmentDto appointmentDto);
 //     AppointmentDto getAppointment(String id);
 //     AppointmentDto updateAppointment(String id, AppointmentDto appointmentDto);
 //     void deleteAppointment(String id);
