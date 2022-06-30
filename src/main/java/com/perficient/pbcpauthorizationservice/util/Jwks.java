@@ -22,10 +22,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 
 import javax.crypto.SecretKey;
 import java.security.KeyPair;
-import java.security.interfaces.ECPrivateKey;
-import java.security.interfaces.ECPublicKey;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
+import java.security.interfaces.*;
 import java.util.UUID;
 
 /**
