@@ -44,13 +44,20 @@ class ApptServiceImplTest {
 
 
     AppointmentDto getValidDto() {
-        AppointmentDto dto = new AppointmentDto();
-        dto.setName("Appointment 1");
-        dto.setType("Checkup");
-        dto.setDescription("Description 1");
-        dto.setStartTime(ZonedDateTime.now());
-        dto.setEndTime(ZonedDateTime.of(2022, 1, 1, 12, 0, 0, 0, ZonedDateTime.now().getZone()));
-        dto.setMetaData(null);
+        AppointmentDto dto = AppointmentDto.builder()
+                .name("John Smith")
+                .type("test")
+                .description("test")
+                .startTime(ZonedDateTime.now())
+                .endTime(ZonedDateTime.now())
+                .metaData(null)
+                .build();
+//        dto.setName("Appointment 1");
+//        dto.setType("Checkup");
+//        dto.setDescription("Description 1");
+//        dto.setStartTime(ZonedDateTime.now());
+//        dto.setEndTime(ZonedDateTime.of(2022, 1, 1, 12, 0, 0, 0, ZonedDateTime.now().getZone()));
+//        dto.setMetaData(null);
         return dto;
     }
 
@@ -100,7 +107,7 @@ class ApptServiceImplTest {
         AppointmentDto dto = apptService.getAppt(APPT_ID);
         // Assert
         assertNotNull(dto);
-        assertEquals("Appointment 1", dto.getName());
+        assertEquals(getValidDto().getName(), dto.getName());
     }
 
     @Test

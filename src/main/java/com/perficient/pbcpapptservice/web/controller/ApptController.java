@@ -3,7 +3,9 @@ package com.perficient.pbcpapptservice.web.controller;
 import com.perficient.pbcpapptservice.model.AppointmentDto;
 import com.perficient.pbcpapptservice.services.ApptService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,7 @@ public class ApptController {
      * Get a list of all appointments
      * @return a list of appointments and 200 (OK) status if successful else 404 (Not Found)
      */
-    @GetMapping("/appts")
+    @GetMapping("/all")
     public ResponseEntity getAppts() {
         List<AppointmentDto> apptDtos = apptService.getAppts();
         if(apptDtos.isEmpty()){
@@ -43,9 +45,9 @@ public class ApptController {
     public ResponseEntity getAppt(@PathVariable("id") Long id) {
         AppointmentDto apptDto = apptService.getAppt(id);
         if(apptDto == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity(apptDto, HttpStatus.OK);
+        return new ResponseEntity<>(apptDto, HttpStatus.OK);
     }
 
     /**
@@ -53,9 +55,15 @@ public class ApptController {
      * @param appointmentDto the appointment to create
      * @return a 201 (CREATED) status if successful else 400 (BAD REQUEST)
      */
-    @PostMapping("/appts")
-    public ResponseEntity createAppt(@RequestBody AppointmentDto appointmentDto) {
-        return new ResponseEntity(apptService.createAppt(appointmentDto), HttpStatus.CREATED);
+    @PostMapping(path="/appts", consumes={"application/json"})
+    public ResponseEntity createAppt(@Validated @RequestBody AppointmentDto appointmentDto) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json;");
+        AppointmentDto result = apptService.createAppt(appointmentDto);
+        if(result == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(result, headers, HttpStatus.CREATED);
     }
 
     /**
@@ -112,7 +120,7 @@ public class ApptController {
      * @return a 204 (NO CONTENT) status if successful else 404 (Not Found)
      */
     @PutMapping("/appts/{id}/reschedule")
-    public ResponseEntity rescheduleAppt(@PathVariable("userId") Long id) {
+    public ResponseEntity rescheduleAppt(@PathVariable("id") Long id) {
         if(!apptService.exists(id)) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
@@ -126,7 +134,7 @@ public class ApptController {
      * @return a 204 (NO CONTENT) status if successful else 404 (Not Found)
      */
     @PutMapping("/appts/{id}/complete")
-    public ResponseEntity completeAppt(@PathVariable("userId") Long id) {
+    public ResponseEntity completeAppt(@PathVariable("id") Long id) {
         if(!apptService.exists(id)) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
