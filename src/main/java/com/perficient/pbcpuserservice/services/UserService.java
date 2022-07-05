@@ -14,6 +14,12 @@ import java.util.List;
 public interface UserService {
     UserDto getUserById(Long userId);
 
+    List<UserDto> getUserByFirstName(String firstName);
+
+    List<UserDto> getUserByLastName(String lastName);
+
+    List<UserDto> getUserByFullName(String firstName, String lastName);
+
     UserDto createNewUser(UserDto userDto);
 
     UserDto updateUser(Long userId, UserDto userDto) throws Throwable;

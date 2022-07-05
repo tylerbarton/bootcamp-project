@@ -25,8 +25,7 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -71,6 +70,7 @@ class UserControllerTest {
      */
     private List<UserDto> getValidDtos() {
         List<UserDto> users = new ArrayList<>();
+        users.add(getValidDto());
         users.add(getValidDto());
         return users;
     }
@@ -259,5 +259,102 @@ class UserControllerTest {
                         .content(dtoJson))
                 .andExpect(status().isInternalServerError());
     }
+
+
+    @Test
+    void getUserByName_OK_Using_FirstName() throws Exception {
+        // Arrange
+        List<UserDto> users = getValidDtos();
+        String name = users.get(0).getFirstName();
+        when(userService.getUserByFirstName(anyString())).thenReturn(users);
+        when(userService.getUserByLastName(anyString())).thenReturn(new ArrayList<>());
+        // Act
+        mockMvc.perform(get("/api/v1/user/name/" + name)
+                        .accept(MediaType.APPLICATION_JSON))
+                // Assert
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].firstName", is(name)));
+    }
+
+    @Test
+    void getUserByName_OK_Using_LastName() throws Exception {
+        // Arrange
+        List<UserDto> users = getValidDtos();
+        String name = users.get(0).getLastName();
+        when(userService.getUserByFirstName(anyString())).thenReturn(new ArrayList<>());
+        when(userService.getUserByLastName(anyString())).thenReturn(users);
+        // Act
+        mockMvc.perform(get("/api/v1/user/name/" + name)
+                        .accept(MediaType.APPLICATION_JSON))
+                // Assert
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].lastName", is(name)));
+    }
+
+    @Test
+    void getUserByName_NOT_FOUND() throws Exception {
+        // Arrange
+        List<UserDto> users = getValidDtos();
+        String name = users.get(0).getLastName();
+        when(userService.getUserByFirstName(anyString())).thenReturn(new ArrayList<>());
+        when(userService.getUserByLastName(anyString())).thenReturn(new ArrayList<>());
+        // Act
+        mockMvc.perform(get("/api/v1/user/name/" + name)
+                        .accept(MediaType.APPLICATION_JSON))
+                // Assert
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getUserByFullName_Should_Return_User() throws Exception {
+        // Arrange
+        List<UserDto> users = getValidDtos();
+        String firstName = users.get(0).getFirstName();
+        String lastName = users.get(0).getLastName();
+        when(userService.getUserByFirstName(anyString())).thenReturn(new ArrayList<>());
+        when(userService.getUserByLastName(anyString())).thenReturn(new ArrayList<>());
+        when(userService.getUserByFullName(anyString(), anyString())).thenReturn(users);
+        // Act
+        mockMvc.perform(get("/api/v1/user/name/" + firstName + " " + lastName)
+                        .accept(MediaType.APPLICATION_JSON))
+                // Assert
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].firstName", is(firstName)))
+                .andExpect(jsonPath("$[0].lastName", is(lastName)));
+    }
+
+    @Test
+    void getUserByFullName_Should_Fall_Back_To_FirstName() throws Exception {
+        // Arrange
+        List<UserDto> users = getValidDtos();
+        String name = users.get(0).getFirstName();
+        when(userService.getUserByFirstName(anyString())).thenReturn(users);
+        when(userService.getUserByLastName(anyString())).thenReturn(new ArrayList<>());
+        when(userService.getUserByFullName(anyString(), anyString())).thenReturn(new ArrayList<>());
+        // Act
+        mockMvc.perform(get("/api/v1/user/name/" + name)
+                        .accept(MediaType.APPLICATION_JSON))
+                // Assert
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].firstName", is(name)));
+    }
+
+//    @Test
+//    void getUserByFullName_Should_Fall_Back_To_First_Name(){
+//        // Arrange
+//        User user = getValidUser();
+//        UserDto userDto = userMapper.toDto(user);
+//        when(userRepository.findUserByFirstNameIsAndLastNameIsAndDeletedIsFalse(user.getFirstName(), user.getLastName())).thenReturn(new ArrayList<User>());
+//        when(userRepository.findUserByFirstNameIsAndDeletedIsFalse(user.getFirstName())).thenReturn(new ArrayList<User>(){{add(user);}});
+//        // Act
+//        List<UserDto> newDtos = userService.getUserByFullName(user.getFirstName(), user.getLastName());
+//        UserDto newUserDto = newDtos.get(0);
+//        // Assert
+//        assertEquals(user.getId(), newUserDto.getId());
+//        assertEquals(user.getFirstName(), newUserDto.getFirstName());
+//        assertEquals(user.getLastName(), newUserDto.getLastName());
+//        assertEquals(user.getAge(), newUserDto.getAge());
+//        assertEquals(user.getGender(), newUserDto.getGender());
+//    }
 
 }

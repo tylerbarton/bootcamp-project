@@ -15,9 +15,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
@@ -212,5 +214,75 @@ class UserServiceImplTest {
         ArrayList<UserDto> userDtos = (ArrayList<UserDto>) userService.listUsers();
         // Assert
         assertTrue(userDtos.isEmpty());
+    }
+
+    @Test
+    void getUserByFirstName_Should_Return_User() {
+        // Arrange
+        User user = getValidUser();
+        UserDto userDto = userMapper.toDto(user);
+        when(userRepository.findUserByFirstNameIsAndDeletedIsFalse(user.getFirstName())).thenReturn(new ArrayList<User>(){{add(user);}});
+        // Act
+        List<UserDto> newDtos = userService.getUserByFirstName(user.getFirstName());
+        UserDto newUserDto = newDtos.get(0);
+        // Assert
+        assertEquals(user.getId(), newUserDto.getId());
+        assertEquals(user.getFirstName(), newUserDto.getFirstName());
+        assertEquals(user.getLastName(), newUserDto.getLastName());
+        assertEquals(user.getAge(), newUserDto.getAge());
+        assertEquals(user.getGender(), newUserDto.getGender());
+    }
+
+    @Test
+    void getUserByFirstName_Should_Return_Empty_List_If_No_Users_Exist() {
+        // Arrange
+        when(userRepository.findUserByFirstNameIsAndDeletedIsFalse(anyString())).thenReturn(new ArrayList<User>());
+        // Act
+        List<UserDto> newDtos = userService.getUserByFirstName("");
+        // Assert
+        assertTrue(newDtos.isEmpty());
+    }
+
+//    @Test
+//    void getUserByFirstName_Should_Throw_Not_Found_Exception() {
+//        // Arrange
+//        when(userRepository.findUserByFirstNameIsAndDeletedIsFalse(anyString())).thenReturn(new ArrayList<User>());
+//        // Act
+//        // Assert
+//        assertThrows(NotFoundException.class, () -> userService.getUserByFirstName("test"));
+//    }
+
+    @Test
+    void getUserByLastName_Should_Return_User(){
+        // Arrange
+        User user = getValidUser();
+        UserDto userDto = userMapper.toDto(user);
+        when(userRepository.findUserByLastNameIsAndDeletedIsFalse(user.getLastName())).thenReturn(new ArrayList<User>(){{add(user);}});
+        // Act
+        List<UserDto> newDtos = userService.getUserByLastName(user.getLastName());
+        UserDto newUserDto = newDtos.get(0);
+        // Assert
+        assertEquals(user.getId(), newUserDto.getId());
+        assertEquals(user.getFirstName(), newUserDto.getFirstName());
+        assertEquals(user.getLastName(), newUserDto.getLastName());
+        assertEquals(user.getAge(), newUserDto.getAge());
+        assertEquals(user.getGender(), newUserDto.getGender());
+    }
+
+    @Test
+    void getUserByFullName_Should_Return_User(){
+        // Arrange
+        User user = getValidUser();
+        UserDto userDto = userMapper.toDto(user);
+        when(userRepository.findUserByFirstNameIsAndLastNameIsAndDeletedIsFalse(user.getFirstName(), user.getLastName())).thenReturn(new ArrayList<User>(){{add(user);}});
+        // Act
+        List<UserDto> newDtos = userService.getUserByFullName(user.getFirstName(), user.getLastName());
+        UserDto newUserDto = newDtos.get(0);
+        // Assert
+        assertEquals(user.getId(), newUserDto.getId());
+        assertEquals(user.getFirstName(), newUserDto.getFirstName());
+        assertEquals(user.getLastName(), newUserDto.getLastName());
+        assertEquals(user.getAge(), newUserDto.getAge());
+        assertEquals(user.getGender(), newUserDto.getGender());
     }
 }

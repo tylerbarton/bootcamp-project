@@ -17,12 +17,59 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("${service.api.path}")
-@CrossOrigin(origins = "*") // Enables cross-origin requests
+@CrossOrigin(origins = "*") // Enables cross-origin requests, allowing the service to be called from a different domain.
 @Validated
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    /**
+     * Get a user by id
+     *
+     * @param name Either the first, last or full name of the user.
+     * @return the user and 200 (OK) if found, else 404 (NOT FOUND)
+     */
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<UserDto>> getUser(@PathVariable("name") String name){
+        if(name == null || name.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(name.contains("%20") || name.contains(" ")){
+            // Search by full name
+            String[] names = name.split(" |%20");
+            if(names.length >= 2){
+                return new ResponseEntity<>(userService.getUserByFullName(names[0], names[1]), HttpStatus.OK);
+            }
+        }
+        if (name.contains(",")) {
+            // Search by full name as last, first
+            String[] names = name.split(",");
+            if (names.length == 2) {
+                return new ResponseEntity<>(userService.getUserByFullName(names[1], names[0]), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+
+        // Try to find by first name
+        List<UserDto> firstNameDtos = userService.getUserByFirstName(name);
+        List<UserDto> lastNameDtos = userService.getUserByLastName(name);
+        if(firstNameDtos.isEmpty() && lastNameDtos.isEmpty()){
+            // No users found
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            // Combine the two lists
+            if(firstNameDtos == null || firstNameDtos.isEmpty()){
+                return new ResponseEntity<>(lastNameDtos, HttpStatus.OK);
+            } else if(lastNameDtos == null || lastNameDtos.isEmpty()){
+                return new ResponseEntity<>(firstNameDtos, HttpStatus.OK);
+            } else {
+                firstNameDtos.addAll(lastNameDtos);
+                return new ResponseEntity<>(firstNameDtos, HttpStatus.OK);
+            }
+        }
+    }
 
     /**
      * Get a user by id

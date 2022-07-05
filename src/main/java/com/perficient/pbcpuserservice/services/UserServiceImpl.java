@@ -11,6 +11,7 @@ import org.apache.commons.lang.NullArgumentException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,6 +51,49 @@ public class UserServiceImpl implements UserService {
 
         log.debug("Successfully retrieved user " + user.getId());
         return userMapper.toDto(user);
+    }
+
+    /**
+     * Gets the user information from the repository by first name
+     * @param firstName first name of the user
+     * @return user information
+     */
+    @Override
+    public List<UserDto> getUserByFirstName(String firstName) {
+        List<User> users = userRepository.findUserByFirstNameIsAndDeletedIsFalse(firstName);
+        if(users == null || users.isEmpty()){
+            return new ArrayList<>(0);
+        }
+        return userMapper.toDtos(users);
+    }
+
+    /**
+     * Gets the user information from the repository by last name
+     * @param lastName last name of the user
+     * @return user information
+     */
+    @Override
+    public List<UserDto> getUserByLastName(String lastName) {
+        List<User> users = userRepository.findUserByLastNameIsAndDeletedIsFalse(lastName);
+        if(users == null || users.isEmpty()){
+            return new ArrayList<>(0);
+        }
+        return userMapper.toDtos(users);
+    }
+
+    /**
+     * Gets the user information from the repository by both first and last name.
+     * @param firstName first name of the user
+     * @param lastName last name of the user
+     * @return user information
+     */
+    @Override
+    public List<UserDto> getUserByFullName(String firstName, String lastName) {
+        List<User> users = userRepository.findUserByFirstNameIsAndLastNameIsAndDeletedIsFalse(firstName, lastName);
+        if(users == null || users.isEmpty()){
+            return new ArrayList<>(0);
+        }
+        return userMapper.toDtos(users);
     }
 
     /**
