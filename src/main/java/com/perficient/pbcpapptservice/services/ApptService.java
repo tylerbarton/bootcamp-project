@@ -1,5 +1,6 @@
 package com.perficient.pbcpapptservice.services;
 
+import com.perficient.pbcpapptservice.domain.ApptStatus;
 import com.perficient.pbcpapptservice.model.AppointmentDto;
 
 import java.util.List;
@@ -34,4 +35,6 @@ public interface ApptService {
     void hardDeleteAppt(Long id);
 
     void softDeleteAppt(Long id);
+
+    ApptStatus getApptStatus(Long id);
 }
