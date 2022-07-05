@@ -19,7 +19,11 @@ public interface UserRepository extends MongoRepository<User, Long> {
     List<User> findAllByIdAndDeleted(Long userId, boolean isDeleted);
     @Query("{'isDeleted': false}")
     List<User> findAllAndDeletedIsFalse();
+
+    @Query("{'firstName': ?0, 'isDeleted': false}")
     List<User> findUserByFirstNameIsAndDeletedIsFalse(String firstName);
+    @Query("{'lastName': ?0, 'isDeleted': false}")
     List<User> findUserByLastNameIsAndDeletedIsFalse(String lastName);
+    @Query("{'firstName':?0, 'lastName': ?1, 'isDeleted': false}")
     List<User> findUserByFirstNameIsAndLastNameIsAndDeletedIsFalse(String firstName, String lastName);
 }
