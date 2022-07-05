@@ -7,6 +7,12 @@ import java.time.ZonedDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AppointmentTest {
+    @Test
+    void getId(){
+        Appointment appt = new Appointment();
+        appt.setId(1L);
+        assertEquals(1L, appt.getId());
+    }
 
     @Test
     void getName() {
@@ -82,8 +88,9 @@ class AppointmentTest {
     @Test
     void setStartTime() {
         Appointment appt = new Appointment();
-        appt.setStartTime(ZonedDateTime.now());
-        assertEquals(ZonedDateTime.now(), appt.getStartTime());
+        ZonedDateTime startTime = ZonedDateTime.now();
+        appt.setStartTime(startTime);
+        assertEquals(startTime, appt.getStartTime());
     }
 
     @Test
