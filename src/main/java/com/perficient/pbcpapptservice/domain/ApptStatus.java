@@ -8,9 +8,9 @@ package com.perficient.pbcpapptservice.domain;
  * @project PBCP-ApptService
  */
 public enum ApptStatus {
-    PENDING,
-    CONFIRMED,
-    CANCELLED,
-    RESCHEDULED,
-    COMPLETED
+    PENDING,    // Indicates the client made the appointment, waiting for confirmation.
+    SCHEDULED,  // The appointment has been confirmed by the handler.
+    CANCELLED,  // The appointment has been cancelled.
+    RESCHEDULED, // The appointment has been rescheduled, no link.
+    COMPLETED   // The appointment has been completed.
 }
