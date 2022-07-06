@@ -27,7 +27,7 @@ public class MvcExceptionHandler {
 
     /**
      * Catches constraint violations and returns a proper response
-     * @ImplNote: Spring will perform the translation after it is invoked in the transactional method.
+     * @implNote: Spring will perform the translation after it is invoked in the transactional method.
      * @param e the exception
      * @return a proper response
      */
