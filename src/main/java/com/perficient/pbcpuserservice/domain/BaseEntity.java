@@ -1,9 +1,9 @@
 package com.perficient.pbcpuserservice.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
 
 /**
  *
@@ -18,5 +18,8 @@ public class BaseEntity {
 
     @Id
     private Long id;
+
+    @JsonIgnore
     private boolean isDeleted; // soft delete
+
 }
