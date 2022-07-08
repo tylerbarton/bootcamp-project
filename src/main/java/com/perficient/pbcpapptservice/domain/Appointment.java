@@ -1,6 +1,7 @@
 package com.perficient.pbcpapptservice.domain;
 
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.security.Timestamp;
 import java.time.ZonedDateTime;
@@ -16,6 +17,7 @@ import java.time.ZonedDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "appointments")
 public class Appointment extends BaseEntity {
 
     // Required fields
