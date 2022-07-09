@@ -3,8 +3,7 @@ package com.perficient.pbcpapptservice.domain;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.security.Timestamp;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 /**
  * Contains appointment information for domain usage.
@@ -24,8 +23,8 @@ public class Appointment extends BaseEntity {
     private String name;
     private String type;
     private String description;
-    private ZonedDateTime startTime;
-    private ZonedDateTime endTime;
+    private Instant startTime;
+    private Instant endTime;
     private Object metaData;
 
     // Additional fields
