@@ -19,6 +19,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("${service.api.path}")
+@CrossOrigin(origins = "*") // Enables cross-origin requests, allowing the service to be called from a different domain.
 public class ApptController {
     @Autowired
     private ApptService apptService;
