@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -48,8 +49,8 @@ class ApptControllerTest {
         return AppointmentDto.builder()
                 .name("John Smith")
                 .type("Checkup")
-                .startTime(ZonedDateTime.of(2020, 1, 1, 12, 0, 0, 0, ZoneId.of("UTC")))
-                .endTime(ZonedDateTime.of(2020, 1, 1, 13, 0, 0, 0, ZoneId.systemDefault()))
+                .startTime(Instant.from(ZonedDateTime.of(2020, 1, 1, 12, 0, 0, 0, ZoneId.of("UTC"))))
+                .endTime(Instant.from(ZonedDateTime.of(2020, 1, 1, 13, 0, 0, 0, ZoneId.systemDefault())))
                 .description("Test Appointment")
                 .build();
     }
@@ -73,8 +74,8 @@ class ApptControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name", Matchers.containsString("John Smith")))
                 .andExpect(jsonPath("$[0].type",  Matchers.containsString("Checkup")))
-                .andExpect(jsonPath("$[0].startTime",  Matchers.containsString("2020-01-01T12:00:00Z")))
-                .andExpect(jsonPath("$[0].endTime",  Matchers.containsString("2020-01-01T13:00:00-06:00")))
+                .andExpect(jsonPath("$[0].startTime",  Matchers.containsString("2020-01-01 12:00:00")))
+                .andExpect(jsonPath("$[0].endTime",  Matchers.containsString("2020-01-01 19:00:00")))
                 .andExpect(jsonPath("$[0].description",  Matchers.containsString("Test Appointment")));
     }
 
@@ -99,8 +100,8 @@ class ApptControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name", Matchers.containsString("John Smith")))
                 .andExpect(jsonPath("$.type",  Matchers.containsString("Checkup")))
-                .andExpect(jsonPath("$.startTime",  Matchers.containsString("2020-01-01T12:00:00Z")))
-                .andExpect(jsonPath("$.endTime",  Matchers.containsString("2020-01-01T13:00:00-06:00")))
+                .andExpect(jsonPath("$.startTime",  Matchers.containsString("2020-01-01 12:00:00")))
+                .andExpect(jsonPath("$.endTime",  Matchers.containsString("2020-01-01 19:00:00")))
                 .andExpect(jsonPath("$.description",  Matchers.containsString("Test Appointment")));
     }
 
@@ -129,8 +130,8 @@ class ApptControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name", Matchers.containsString("John Smith")))
                 .andExpect(jsonPath("$.type",  Matchers.containsString("Checkup")))
-                .andExpect(jsonPath("$.startTime",  Matchers.containsString("2020-01-01T12:00:00Z")))
-                .andExpect(jsonPath("$.endTime",  Matchers.containsString("2020-01-01T13:00:00-06:00")))
+                .andExpect(jsonPath("$.startTime",  Matchers.containsString("2020-01-01 12:00:00")))
+                .andExpect(jsonPath("$.endTime",  Matchers.containsString("2020-01-01 19:00:00")))
                 .andExpect(jsonPath("$.description",  Matchers.containsString("Test Appointment")));
     }
 

@@ -2,6 +2,7 @@ package com.perficient.pbcpapptservice.domain;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,7 +39,7 @@ class AppointmentTest {
     @Test
     void getStartTime() {
         Appointment appt = new Appointment();
-        ZonedDateTime startTime = ZonedDateTime.now();
+        Instant startTime = Instant.from(ZonedDateTime.now());
         appt.setStartTime(startTime);
         assertEquals(startTime, appt.getStartTime());
     }
@@ -46,8 +47,10 @@ class AppointmentTest {
     @Test
     void getEndTime() {
         Appointment appt = new Appointment();
-        appt.setEndTime(ZonedDateTime.of(2022, 1, 1, 12, 0, 0, 0, ZonedDateTime.now().getZone()));
-        assertEquals(ZonedDateTime.of(2022, 1, 1, 12, 0, 0, 0, ZonedDateTime.now().getZone()), appt.getEndTime());
+        Instant endTime = Instant.from(ZonedDateTime.of(2022, 1, 1, 12, 0, 0, 0, ZonedDateTime.now().getZone()));
+        appt.setEndTime(endTime);
+        assertEquals(endTime
+                , appt.getEndTime());
     }
 
     @Test
@@ -88,7 +91,7 @@ class AppointmentTest {
     @Test
     void setStartTime() {
         Appointment appt = new Appointment();
-        ZonedDateTime startTime = ZonedDateTime.now();
+        Instant startTime = Instant.from(ZonedDateTime.now());
         appt.setStartTime(startTime);
         assertEquals(startTime, appt.getStartTime());
     }
@@ -96,8 +99,8 @@ class AppointmentTest {
     @Test
     void setEndTime() {
         Appointment appt = new Appointment();
-        appt.setEndTime(ZonedDateTime.of(2022, 1, 1, 12, 0, 0, 0, ZonedDateTime.now().getZone()));
-        assertEquals(ZonedDateTime.of(2022, 1, 1, 12, 0, 0, 0, ZonedDateTime.now().getZone()), appt.getEndTime());
+        appt.setEndTime(Instant.from(ZonedDateTime.of(2022, 1, 1, 12, 0, 0, 0, ZonedDateTime.now().getZone())));
+        assertEquals(Instant.from(ZonedDateTime.of(2022, 1, 1, 12, 0, 0, 0, ZonedDateTime.now().getZone())), appt.getEndTime());
     }
 
     @Test

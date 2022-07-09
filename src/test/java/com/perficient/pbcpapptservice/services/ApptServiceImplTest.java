@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +49,8 @@ class ApptServiceImplTest {
                 .name("John Smith")
                 .type("test")
                 .description("test")
-                .startTime(ZonedDateTime.now())
-                .endTime(ZonedDateTime.now())
+                .startTime(Instant.from(ZonedDateTime.now()))
+                .endTime(Instant.from(ZonedDateTime.now()))
                 .metaData(null)
                 .build();
 //        dto.setName("Appointment 1");
