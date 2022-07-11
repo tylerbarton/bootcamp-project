@@ -1,5 +1,6 @@
 package com.perficient.pbcpapptservice.web.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * @version 1.0, 6/27/2022
  * @project PBCP-ApptService
  */
+@Slf4j
 @ControllerAdvice // Catch all exceptions in the controller
 public class MvcExceptionHandler {
     /**
@@ -43,6 +45,7 @@ public class MvcExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
+        log.error("Exception caught in controller", e);
         return new ResponseEntity<>("Exception Caught:" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
