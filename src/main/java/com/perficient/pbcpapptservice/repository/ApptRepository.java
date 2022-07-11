@@ -24,6 +24,8 @@ public interface ApptRepository extends MongoRepository<Appointment, Long> {
     List<Appointment> findAppointmentsByDeletedIsFalse();
     List<Appointment> findAppointmentsByDeletedIsFalseAndStatus(ApptStatus status);
     List<Appointment> findAppointmentsByDeletedTrue();
+
+    @Query("{'id': ?0, 'isDeleted': false}")
     boolean existsByIdAndDeletedIsFalse(Long id);
 }
 
