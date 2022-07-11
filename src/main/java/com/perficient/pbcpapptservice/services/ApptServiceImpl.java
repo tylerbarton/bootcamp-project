@@ -97,6 +97,9 @@ public class ApptServiceImpl implements ApptService {
     @Override
     public void softDeleteAppt(Long id) {
         Appointment appt = apptRepository.findById(id).orElse(null);
+        if(appt == null) {
+           return;
+        }
         appt.setDeleted(true);
         apptRepository.save(appt);
     }

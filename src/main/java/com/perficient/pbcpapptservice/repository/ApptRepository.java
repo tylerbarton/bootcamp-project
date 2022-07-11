@@ -3,6 +3,7 @@ package com.perficient.pbcpapptservice.repository;
 import com.perficient.pbcpapptservice.domain.Appointment;
 import com.perficient.pbcpapptservice.domain.ApptStatus;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.repository.ExistsQuery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,7 +26,8 @@ public interface ApptRepository extends MongoRepository<Appointment, Long> {
     List<Appointment> findAppointmentsByDeletedIsFalseAndStatus(ApptStatus status);
     List<Appointment> findAppointmentsByDeletedTrue();
 
-    @Query("{'id': ?0, 'isDeleted': false}")
+
+    @ExistsQuery("{'id': ?0, 'isDeleted': false}")
     boolean existsByIdAndDeletedIsFalse(Long id);
 }
 
