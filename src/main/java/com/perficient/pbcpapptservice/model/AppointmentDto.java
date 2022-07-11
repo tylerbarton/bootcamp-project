@@ -22,7 +22,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @Builder
 public class AppointmentDto {
-    private Long id;
+    private String id;
     private String name;
     private String type;
     private String description;
