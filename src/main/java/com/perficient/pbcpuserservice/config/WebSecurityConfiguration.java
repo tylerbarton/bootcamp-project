@@ -16,12 +16,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  * @implNote https://www.techgeeknext.com/spring-boot-security/basic_authentication_web_security
  * @implNote https://github.com/Baeldung/spring-security-oauth/tree/master/oauth-rest
  */
-//@CrossOrigin(origins = "*") // Enables cross-origin requests, allowing the service to be called from a different domain.
-//@EnableWebSecurity
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    // Gets the values from the application.properties file.
     @Value("${spring.security.user.name}")
     private String username;
 
@@ -34,12 +33,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      * 1. Creates a user with the username "admin" and password "admin".
      * 2. Enables HTTP Basic and Form based authentication.
      * 3. Requires the user to have been authenticated within our application.
-     * @param auth
-     * @throws Exception
+     * @param auth The authentication manager.
+     * @throws Exception If there is an error.
      */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        // {noop} is required in Spring 5.0.x
+        // {noop} is required in Spring 5.0.x and uses the NoOpPasswordEncoder.
         auth.inMemoryAuthentication()
                 .withUser(username).password("{noop}" + password).roles("USER").and()
                 .withUser("admin").password("{noop}admin").roles("ADMIN");
