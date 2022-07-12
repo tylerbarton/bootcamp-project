@@ -17,7 +17,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {// @formatter:off
         http.authorizeRequests().anyRequest().authenticated()
                 .and()
-                .oauth2Login();// @formatter:on
+                .httpBasic();
+//                .oauth2Login();// @formatter:on
 
 
 //        http.cors()
