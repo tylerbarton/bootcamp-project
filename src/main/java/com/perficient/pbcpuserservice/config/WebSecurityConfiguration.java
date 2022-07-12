@@ -44,37 +44,4 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .withUser(username).password("{noop}" + password).roles("USER").and()
                 .withUser("admin").password("{noop}admin").roles("ADMIN");
     }
-
-    /**
-     * Encrypts passwords.
-     * @return the password encoder
-     */
-//    @Bean
-//    public PasswordEncoder passwordEncoder(){
-//        return new BCryptPasswordEncoder();
-//    }
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {// @formatter:off
-//        http.authorizeRequests().anyRequest().authenticated()
-//                .and()
-//                .httpBasic();
-////                .oauth2Login();// @formatter:on
-////        http.cors().and().csrf().disable();
-////                .and()
-////                .httpBasic();
-//
-////        http.cors()
-////                .and()
-////                .authorizeRequests()
-////                .antMatchers(HttpMethod.GET, "/user/info", "/api/foos/**")
-////                .hasAuthority("SCOPE_read")
-////                .antMatchers(HttpMethod.POST, "/api/foos")
-////                .hasAuthority("SCOPE_write")
-////                .anyRequest()
-////                .authenticated()
-////                .and()
-////                .oauth2ResourceServer()
-////                .jwt();
-//    }//@formatter:on
 }
