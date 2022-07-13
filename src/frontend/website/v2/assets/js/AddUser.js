@@ -1,5 +1,11 @@
+// Api Information
 let submitted = false;
 const apiUrl = "http://localhost:8080/api/v1/user";
+
+// Authentication
+const auth_user = 'user';
+const auth_pass = '11bd0a707e58-44ac85e717ec0aa5cb96';
+const auth_token = 'Basic ' + btoa(auth_user + ':' + auth_pass);
 
 /**
  * send a POST request with data as the body to the API.
@@ -11,7 +17,8 @@ const postData = async (url = '', data = {}) => {
     const fetchOptions = {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': auth_token
         },
         mode: 'cors',
         body: JSON.stringify(data)
