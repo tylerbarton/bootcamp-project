@@ -50,11 +50,11 @@ onRemoveUser = (e) => {
  * @param table - The table to add the user to.
  * @param user - The user to add.
  */
-const addUserToTable = (table, user) => {
+const addUserToTable = (tbody, user) => {
     // Create cells with properties of <td class="pt-3-half" contenteditable="true"> for each cell
 
     // Define the cells
-    const row = table.insertRow();
+    const row = tbody.insertRow();
     const idCell = row.insertCell(0);
     const firstNameCell = row.insertCell(1);
     const lastNameCell = row.insertCell(2);
@@ -146,16 +146,17 @@ const addUserDataToTable = (users) => {
     // const table = document.querySelector('table[class="table table-hover table-sm table-bordered"]');
     table.innerHTML = "";
     addTableHeader(table);
+    const tbody = table.createTBody();
 
     // Add users to table
     const usersResult = JSON.parse(users);
     if(isArray(usersResult)) {
         usersResult.forEach(user => {
-            addUserToTable(table, user);
+            addUserToTable(tbody, user);
         });
     } else {
         // For single user
-        addUserToTable(table, usersResult);
+        addUserToTable(tbody, usersResult);
     }
 }
 
