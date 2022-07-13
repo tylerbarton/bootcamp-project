@@ -18,8 +18,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  * @implNote https://github.com/Baeldung/spring-security-oauth/tree/master/oauth-rest
  */
 @Configuration
-@EnableWebSecurity
-@Profile(value = {"development", "production"})
+@EnableWebSecurity(debug = true)
+//@Profile(value = {"development", "production"})
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     // Gets the values from the application.properties file.
