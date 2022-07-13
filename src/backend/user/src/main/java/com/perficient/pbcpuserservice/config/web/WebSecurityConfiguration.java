@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
  * @implNote https://github.com/Baeldung/spring-security-oauth/tree/master/oauth-rest
  */
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity()
 //@Profile(value = {"development", "production"})
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
