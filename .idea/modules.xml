@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/bootcamp-project.iml" filepath="$PROJECT_DIR$/.idea/bootcamp-project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/backend/management/management.iml" filepath="$PROJECT_DIR$/src/backend/management/management.iml" />
     </modules>
   </component>
 </project>
