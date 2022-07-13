@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/src/backend/appointment/PBCP-ApptService.iml" filepath="$PROJECT_DIR$/src/backend/appointment/PBCP-ApptService.iml" />
       <module fileurl="file://$PROJECT_DIR$/src/backend/user/PBCP-UserService.iml" filepath="$PROJECT_DIR$/src/backend/user/PBCP-UserService.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/bootcamp-project.iml" filepath="$PROJECT_DIR$/.idea/bootcamp-project.iml" />
     </modules>
