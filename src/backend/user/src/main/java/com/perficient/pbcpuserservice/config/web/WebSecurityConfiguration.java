@@ -45,17 +45,21 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // {noop} is required in Spring 5.0.x and uses the NoOpPasswordEncoder.
         auth.inMemoryAuthentication()
                 .withUser(username).password("{noop}" + password).roles("USER").and()
-                .withUser("admin").password("{noop}admin").roles("ADMIN");
+                .withUser("admin").password("{noop}admin").roles("ADMIN").authorities("ROLE_ADMIN");
     }
 
     /**
      * Enables HTTP Basic and Form based authentication.
      * @param http
      * @throws Exception
+     * @implNote https://spring.io/blog/2013/08/21/spring-security-3-2-0-rc1-highlights-csrf-protection/
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // Add the CORS filter to the chain of filters.
         http.addFilterAfter(new CORSFilter(), BasicAuthenticationFilter.class);
+
+        // Disable CSRF protection since the request is coming from the browser.
+        http.csrf().disable();
     }
 }
