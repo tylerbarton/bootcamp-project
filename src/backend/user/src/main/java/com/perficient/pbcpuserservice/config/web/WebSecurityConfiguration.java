@@ -1,12 +1,14 @@
-package com.perficient.pbcpuserservice.config;
+package com.perficient.pbcpuserservice.config.web;
 
+import com.perficient.pbcpuserservice.config.web.CORSFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 /**
  * Attempts to implement OAuth2 authentication with Json Web Token using Spring Security.
@@ -44,5 +46,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication()
                 .withUser(username).password("{noop}" + password).roles("USER").and()
                 .withUser("admin").password("{noop}admin").roles("ADMIN");
+    }
+
+    /**
+     * Enables HTTP Basic and Form based authentication.
+     * @param http
+     * @throws Exception
+     */
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // Add the CORS filter to the chain of filters.
+        http.addFilterAfter(new CORSFilter(), BasicAuthenticationFilter.class);
     }
 }
