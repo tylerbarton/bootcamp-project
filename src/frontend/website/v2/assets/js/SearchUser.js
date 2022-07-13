@@ -1,6 +1,11 @@
 const table_div = document.querySelector('div[class="table_information"]');
 const errorMessage = document.querySelector('p[class="user_error fw-bold text-danger shake animated"]');
 
+// Authentication
+const auth_user = 'admin'; //'user';
+const auth_pass = 'admin'; //'11bd0a707e58-44ac85e717ec0aa5cb96';
+const auth_token = 'Basic ' + btoa(auth_user + ':' + auth_pass);
+
 /**
  * Displays an error message.
  * @param message
@@ -44,7 +49,7 @@ const addUserToTable = (table, user) => {
 }
 
 /**
- * Checks if the object is an array or not
+ * Helper function to check if the object is an array or not
  * @param what - The object to check
  * @returns {boolean} - True if the object is an array, false otherwise
  * @link https://stackoverflow.com/questions/4775722/how-to-check-if-an-object-is-array
@@ -135,13 +140,18 @@ const onSearchUser = (e) => {
     }
 
     const fetchOptions = {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+            'Authorization': auth_token
+        },
+        // mode: 'cors'
     };
 
     /**
      * Fetches the user from the API.
      */
     const fetchData = async () => {
+        console.log("Token: " + auth_token);
         const response = await fetch(apiUrl, fetchOptions);
         const code = response.status;
 
@@ -150,6 +160,9 @@ const onSearchUser = (e) => {
             console.log("We got a response: ", user);
             addUserDataToTable(JSON.stringify(user));
             // textArea.value = JSON.stringify(user);
+        }
+        else if (code === 401) {
+            displayError("Unauthorized");
         }
         else {
             console.log("We got a response: ", code);
