@@ -33,7 +33,9 @@ public class MvcExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        String fieldName = e.getBindingResult().getFieldError().getField();
+        String message = fieldName + " has an invalid value";
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
     /**
