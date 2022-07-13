@@ -235,11 +235,16 @@ const onAddUser = (e) => {
  * Manages the initialisation of the page.
  */
 const onLoad = () => {
-    // Hide elements
+    // Check if the url contains User.html
+    if(window.location.href.indexOf("User.html") <= -1) {
+        return;
+    }
 
+    // Hide elements
     table_div.style.display = "none";
-    const table = document.querySelector('table[class="table table-striped"]');
     errorMessage.style.display = "none";
+
+    const table = document.querySelector('table[class="table table-striped"]');
 }
 
 onLoad();
