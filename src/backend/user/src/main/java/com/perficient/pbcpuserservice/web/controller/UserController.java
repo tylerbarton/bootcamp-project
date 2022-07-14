@@ -170,6 +170,12 @@ public class UserController {
      */
     @PutMapping("/{userId}")
     public ResponseEntity updateUser(@PathVariable("userId") Long userId, @RequestBody @Validated UserDto userDto) throws Throwable {
+        // Validate objects inside the dto
+        Validate(userDto);
+
+        // Set the user id so one is not generated
+        userDto.setId(userId.toString());
+
         UserDto savedDto = userService.updateUser(userId, userDto);
         if (savedDto == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
