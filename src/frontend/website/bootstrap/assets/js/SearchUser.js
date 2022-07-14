@@ -162,7 +162,7 @@ const addUserToTable = (tbody, user) => {
 
     // Hook the cells to the onEditUser function
     for (let i = 0; i < row.cells.length-1; i++) {
-        row.cells[i].addEventListener('focus', onEditUser);
+        row.cells[i].addEventListener('blur', onEditUser);
     }
 
     // Add the remove cell button that will remove the user from the table that includes the user id
