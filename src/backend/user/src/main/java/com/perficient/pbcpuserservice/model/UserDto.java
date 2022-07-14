@@ -7,7 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -33,8 +35,8 @@ public class UserDto implements Serializable {
     private String gender;
     @PositiveOrZero
     private int age;
-//    @Pattern(regexp = EmailAddress.EMAIL_ADDRESS_REGEX)
+    @Valid // Required to validate the object
     private EmailAddress[] emailAddress;
-//    @Pattern(regexp = PhoneNumber.PHONE_NUMBER_REGEX)
+    @Valid
     private PhoneNumber[] phoneNumber;
 }

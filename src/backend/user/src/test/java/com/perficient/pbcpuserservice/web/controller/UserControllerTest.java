@@ -1,6 +1,8 @@
 package com.perficient.pbcpuserservice.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.perficient.pbcpuserservice.domain.EmailAddress;
+import com.perficient.pbcpuserservice.domain.PhoneNumber;
 import com.perficient.pbcpuserservice.model.UserDto;
 import com.perficient.pbcpuserservice.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -217,6 +219,10 @@ class UserControllerTest {
         @Override
         public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) throws Exception {
             String uid = "0";
+            EmailAddress invalidEmail = new EmailAddress();
+            invalidEmail.setAddress("invalidEmail");
+            PhoneNumber invalidPhone = new PhoneNumber();
+            invalidPhone.setNumber("invalidPhone");
             return Stream.of(
                     // firstName exceeds length
                     Arguments.of(new UserDto(uid, "Johnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn", "Smith", "M", 57, null, null)),
@@ -230,6 +236,10 @@ class UserControllerTest {
                     Arguments.of(new UserDto(uid, "John", null, "M", 57, null, null)),
                     // first name is blank
                     Arguments.of(new UserDto(uid, "", "Smith", "M", 57, null, null))
+                    // Email is invalid format (not a valid email address)
+                    ,Arguments.of(new UserDto(uid, "John", "Smith", "M", 57, new EmailAddress[]{invalidEmail}, null))
+                    // Phone is invalid format (not a valid phone number)
+                    ,Arguments.of(new UserDto(uid, "John", "Smith", "M", 57, null, new PhoneNumber[]{invalidPhone}))
             );
         }
     }
