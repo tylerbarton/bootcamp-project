@@ -23,7 +23,7 @@ const displayError = (message) => {
  * @param e
  */
 const onEditUser = (e) => {
-    // Get the user id
+    // Get the user id from the row that this button is in
     const userId = e.target.parentElement.parentElement.id;
 
     // Get the user data
@@ -34,15 +34,48 @@ const onEditUser = (e) => {
 }
 
 /**
+ * Visually remove the user from the table.
+ * @param table
+ * @param userId
+ */
+removeUserFromTable = (table, userId) => {
+    // Remove the row with the user id from the table
+    const row = table.querySelector(`tr[id="${userId}"]`);
+    row.remove();
+}
+
+/**
  * Handles the onClick event of the Remove User button to send a DELETE request to the API.
  * @param e
  */
 onRemoveUser = (e) => {
-    // Get the user id
-    const userId = e.target.parentElement.parentElement.id;
+    // Get the user id from the row that this button is in
+    const userId = e.parentElement.parentElement.id;
 
-    // Remove the user from the table
-    removeUserFromTable(table, userId);
+
+
+    // Send a DELETE request to the API
+    const url = `http://localhost:8080/api/v1/user/${userId}`;
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'Authorization': auth_token
+        }
+    }
+    fetch(url, options)
+        .then(response => {
+            if(response.status === 204) {
+                // Remove the user from the table
+                removeUserFromTable(table, userId);
+
+                // Intentionally display an error to slow the user down
+                displayError("User removed");
+            } else {
+                displayError("Error removing user");
+            }
+        }).catch(error => {
+            displayError("Error removing user");
+        });
 }
 
 /**
@@ -51,10 +84,13 @@ onRemoveUser = (e) => {
  * @param user - The user to add.
  */
 const addUserToTable = (tbody, user) => {
-    // Create cells with properties of <td class="pt-3-half" contenteditable="true"> for each cell
-
     // Define the cells
     const row = tbody.insertRow();
+
+    // Add the user id to the row
+    row.id = user.id;
+
+    // Add the user information to the row
     const idCell = row.insertCell(0);
     const firstNameCell = row.insertCell(1);
     const lastNameCell = row.insertCell(2);
