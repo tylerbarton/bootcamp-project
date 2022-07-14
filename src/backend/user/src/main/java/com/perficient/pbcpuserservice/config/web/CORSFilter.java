@@ -1,6 +1,9 @@
 package com.perficient.pbcpuserservice.config.web;
 
+import org.springframework.context.annotation.Configuration;
+
 import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -11,6 +14,7 @@ import java.io.IOException;
  * @version 1.0, 7/13/2022
  * @project bootcamp-project
  */
+@WebFilter(urlPatterns = "/*", filterName = "CORSFilter")
 public class CORSFilter implements Filter {
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
