@@ -91,7 +91,10 @@ onRemoveUser = (e) => {
     // Get the user id from the row that this button is in
     const userId = e.parentElement.parentElement.id;
 
-
+    // Confirm the user wants to remove the user
+    if(!confirm("Are you sure you want to remove this user?")) {
+        return;
+    }
 
     // Send a DELETE request to the API
     const url = `http://localhost:8080/api/v1/user/${userId}`;
