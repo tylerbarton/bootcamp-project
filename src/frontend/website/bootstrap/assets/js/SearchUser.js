@@ -64,7 +64,7 @@ const onEditUser = (e) => {
 
     fetch(url, options)
         .then(response => {
-            if(response.status === 204) {
+            if(response.status === 204 || response.status === 200) {
                 // OK
             } else {
                 displayError("Error updating user");
