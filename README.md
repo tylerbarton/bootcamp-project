@@ -27,6 +27,9 @@ The backend features two decoupled microservices:
 - **Appointment Service**: This service is responsible for managing appointments. It is responsible for creating, updating, and deleting appointments.
 - **User Service**: This service is responsible for managing users. It is responsible for creating, updating, and deleting managed clients.
 
+## ⚙ Configuration  
+Each microservice can be configured separately in the respective `application.properites` file.
+
 # 💾 Database
 <p align="center">
     <img src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/mongodb/mongodb.png" alt="MongoDB logo" width="64" height="63">
@@ -34,3 +37,12 @@ The backend features two decoupled microservices:
 </p>
 
 The database is a MongoDB database that stores the appointments and users in separate collections. 
+
+# 📑 Documentation
+<p align="center">
+    <img src="https://raw.githubusercontent.com/swagger-api/swagger.io/wordpress/images/assets/SWU-logo-clr.png" alt="Swagger logo" width="" height="64">
+</p>
+
+Documentation for the microservices is generated using Swagger and Swagger UI. It can be accessed by appending the following URL to the host URL: `/swagger-ui/index.html#/`. 
+
+Furthermore, all source code is fully documented with Javadocs.
