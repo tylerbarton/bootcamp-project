@@ -22,7 +22,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 public class UserDto implements Serializable {
-    private Long id;
+    private String id;
     @NotBlank
     @Size(max=45)
     private String firstName;

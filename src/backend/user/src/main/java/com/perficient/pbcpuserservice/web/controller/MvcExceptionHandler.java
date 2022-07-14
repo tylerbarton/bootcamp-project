@@ -34,7 +34,7 @@ public class MvcExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         String fieldName = e.getBindingResult().getFieldError().getField();
-        String message = fieldName + " has an invalid value";
+        String message = "Validation failed: " + fieldName + " has an invalid value";
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 

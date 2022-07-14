@@ -56,7 +56,7 @@ class UserControllerTest {
      */
     UserDto getValidDto(){
         return UserDto.builder()
-                .id(0L)
+                .id(String.valueOf((0L)))
                 .firstName("John")
                 .lastName("Smith")
                 .age(57)
@@ -116,7 +116,7 @@ class UserControllerTest {
         mockMvc.perform(get("/api/v1/user/0").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(0)));
+                .andExpect(jsonPath("$.id", is("0")));
     }
 
     @Test
@@ -204,7 +204,7 @@ class UserControllerTest {
          */
         private UserDto model(){
             UserDto model = new UserDto();
-            model.setId(0L);
+            model.setId("0L");
             model.setFirstName("John");
             model.setLastName("Smith");
             model.setAge(57);
@@ -216,19 +216,20 @@ class UserControllerTest {
 
         @Override
         public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) throws Exception {
+            String uid = "0";
             return Stream.of(
                     // firstName exceeds length
-                    Arguments.of(new UserDto(0L, "Johnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn", "Smith", "M", 57, null, null)),
+                    Arguments.of(new UserDto(uid, "Johnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn", "Smith", "M", 57, null, null)),
                     // lastName exceeds length
-                    Arguments.of(new UserDto(0L, "John", "1234567890123456789012345678901234567890123w4e56789012345678901234567890", "M", 57, null, null)),
+                    Arguments.of(new UserDto(uid, "John", "1234567890123456789012345678901234567890123w4e56789012345678901234567890", "M", 57, null, null)),
                     // age is negative
-                    Arguments.of(new UserDto(0L, "John", "Smith", "M", -1, null, null)),
+                    Arguments.of(new UserDto(uid, "John", "Smith", "M", -1, null, null)),
                     // first name is null
-                    Arguments.of(new UserDto(0L, null, "Smith", "M", 57, null, null)),
+                    Arguments.of(new UserDto(uid, null, "Smith", "M", 57, null, null)),
                     // last name is null
-                    Arguments.of(new UserDto(0L, "John", null, "M", 57, null, null)),
+                    Arguments.of(new UserDto(uid, "John", null, "M", 57, null, null)),
                     // first name is blank
-                    Arguments.of(new UserDto(0L, "", "Smith", "M", 57, null, null))
+                    Arguments.of(new UserDto(uid, "", "Smith", "M", 57, null, null))
             );
         }
     }
@@ -237,7 +238,7 @@ class UserControllerTest {
      * Test creating a user with different fields than the model
      * @throws Exception if the test fails
      */
-    @DisplayName("Test that the controller is wired up correctly")
+    @DisplayName("Test constraint validations")
     @ParameterizedTest(name = "{index}: {0}")
     @ArgumentsSource(PostTestConstraintArgumentsProvider.class)
     void createUser_Constraint_Violation(UserDto dto) throws Exception {

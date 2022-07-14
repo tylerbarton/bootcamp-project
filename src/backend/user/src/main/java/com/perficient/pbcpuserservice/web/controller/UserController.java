@@ -25,7 +25,7 @@ public class UserController {
     private UserService userService;
 
     /**
-     * Get a user by id
+     * Get a user by name
      *
      * @param name Either the first, last or full name of the user.
      * @return the user and 200 (OK) if found, else 404 (NOT FOUND)

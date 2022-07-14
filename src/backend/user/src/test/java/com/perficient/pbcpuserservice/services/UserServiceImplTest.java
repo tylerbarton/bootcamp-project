@@ -152,7 +152,7 @@ class UserServiceImplTest {
         when(userRepository.findAllById(USER_ID)).thenReturn(new ArrayList<User>(){{add(user);}});
         when(userRepository.save(any(User.class))).thenReturn(user);
         // Act
-        UserDto updatedUserDto = userService.updateUser(userDto.getId(), userDto);
+        UserDto updatedUserDto = userService.updateUser(Long.getLong(userDto.getId()), userDto);
         // Assert
         assertEquals(user.getId(), updatedUserDto.getId());
         assertEquals(user.getFirstName(), updatedUserDto.getFirstName());
@@ -169,7 +169,7 @@ class UserServiceImplTest {
         when(userRepository.findAllById(USER_ID)).thenReturn(new ArrayList<User>());
         // Act
         // Assert
-        assertThrows(NotFoundException.class, () -> userService.updateUser(userDto.getId(), userDto));
+        assertThrows(NotFoundException.class, () -> userService.updateUser(Long.getLong(userDto.getId()), userDto));
 
     }
 
@@ -184,7 +184,7 @@ class UserServiceImplTest {
         savedUser.setDeleted(true);
         when(userRepository.save(any(User.class))).thenReturn(user);
         // Act
-        userService.deleteUser(userDto.getId(), false);
+        userService.deleteUser(Long.getLong(userDto.getId()), false);
         // Assert
         assertEquals(user.getId(), userDto.getId());
         assertTrue(user.isDeleted());
