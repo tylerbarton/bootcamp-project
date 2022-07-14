@@ -82,7 +82,7 @@ class UserServiceImplTest {
         // Act
         UserDto userDto = userService.getUserById(USER_ID);
         // Assert
-        assertEquals(user.getId(), userDto.getId());
+        assertEquals(user.getId().toString(), userDto.getId());
         assertEquals(user.getFirstName(), userDto.getFirstName());
         assertEquals(user.getLastName(), userDto.getLastName());
         assertEquals(user.getAge(), userDto.getAge());
@@ -119,7 +119,7 @@ class UserServiceImplTest {
         // Act
         UserDto newUserDto = userService.createNewUser(userDto);
         // Assert
-        assertEquals(user.getId(), newUserDto.getId());
+        assertEquals(user.getId().toString(), newUserDto.getId());
         assertEquals(user.getFirstName(), newUserDto.getFirstName());
         assertEquals(user.getLastName(), newUserDto.getLastName());
         assertEquals(user.getAge(), newUserDto.getAge());
@@ -135,7 +135,7 @@ class UserServiceImplTest {
         // Act
         UserDto newUserDto = userService.createNewUser(userDto);
         // Assert
-        assertEquals(user.getId(), newUserDto.getId());
+        assertEquals(user.getId().toString(), newUserDto.getId());
         assertEquals(user.getFirstName(), newUserDto.getFirstName());
         assertEquals(user.getLastName(), newUserDto.getLastName());
         assertEquals(user.getAge(), newUserDto.getAge());
@@ -152,9 +152,9 @@ class UserServiceImplTest {
         when(userRepository.findAllById(USER_ID)).thenReturn(new ArrayList<User>(){{add(user);}});
         when(userRepository.save(any(User.class))).thenReturn(user);
         // Act
-        UserDto updatedUserDto = userService.updateUser(Long.getLong(userDto.getId()), userDto);
+        UserDto updatedUserDto = userService.updateUser(user.getId(), userDto);
         // Assert
-        assertEquals(user.getId(), updatedUserDto.getId());
+        assertEquals(user.getId().toString(), updatedUserDto.getId());
         assertEquals(user.getFirstName(), updatedUserDto.getFirstName());
         assertEquals(user.getLastName(), updatedUserDto.getLastName());
         assertEquals(user.getAge(), updatedUserDto.getAge());
@@ -169,7 +169,7 @@ class UserServiceImplTest {
         when(userRepository.findAllById(USER_ID)).thenReturn(new ArrayList<User>());
         // Act
         // Assert
-        assertThrows(NotFoundException.class, () -> userService.updateUser(Long.getLong(userDto.getId()), userDto));
+        assertThrows(NotFoundException.class, () -> userService.updateUser(user.getId(), userDto));
 
     }
 
@@ -184,9 +184,9 @@ class UserServiceImplTest {
         savedUser.setDeleted(true);
         when(userRepository.save(any(User.class))).thenReturn(user);
         // Act
-        userService.deleteUser(Long.getLong(userDto.getId()), false);
+        userService.deleteUser(user.getId(), false);
         // Assert
-        assertEquals(user.getId(), userDto.getId());
+        assertEquals(user.getId().toString(), userDto.getId());
         assertTrue(user.isDeleted());
     }
 
@@ -199,7 +199,7 @@ class UserServiceImplTest {
         // Act
         ArrayList<UserDto> userDtos = (ArrayList<UserDto>) userService.listUsers();
         // Assert
-        assertEquals(user.getId(), userDtos.get(0).getId());
+        assertEquals(user.getId().toString(), userDtos.get(0).getId());
         assertEquals(user.getFirstName(), userDtos.get(0).getFirstName());
         assertEquals(user.getLastName(), userDtos.get(0).getLastName());
         assertEquals(user.getAge(), userDtos.get(0).getAge());
@@ -226,7 +226,7 @@ class UserServiceImplTest {
         List<UserDto> newDtos = userService.getUserByFirstName(user.getFirstName());
         UserDto newUserDto = newDtos.get(0);
         // Assert
-        assertEquals(user.getId(), newUserDto.getId());
+        assertEquals(user.getId().toString(), newUserDto.getId());
         assertEquals(user.getFirstName(), newUserDto.getFirstName());
         assertEquals(user.getLastName(), newUserDto.getLastName());
         assertEquals(user.getAge(), newUserDto.getAge());
@@ -262,7 +262,7 @@ class UserServiceImplTest {
         List<UserDto> newDtos = userService.getUserByLastName(user.getLastName());
         UserDto newUserDto = newDtos.get(0);
         // Assert
-        assertEquals(user.getId(), newUserDto.getId());
+        assertEquals(user.getId().toString(), newUserDto.getId());
         assertEquals(user.getFirstName(), newUserDto.getFirstName());
         assertEquals(user.getLastName(), newUserDto.getLastName());
         assertEquals(user.getAge(), newUserDto.getAge());
@@ -279,7 +279,7 @@ class UserServiceImplTest {
         List<UserDto> newDtos = userService.getUserByFullName(user.getFirstName(), user.getLastName());
         UserDto newUserDto = newDtos.get(0);
         // Assert
-        assertEquals(user.getId(), newUserDto.getId());
+        assertEquals(user.getId().toString(), newUserDto.getId());
         assertEquals(user.getFirstName(), newUserDto.getFirstName());
         assertEquals(user.getLastName(), newUserDto.getLastName());
         assertEquals(user.getAge(), newUserDto.getAge());
