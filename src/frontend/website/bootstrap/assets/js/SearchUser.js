@@ -1,4 +1,6 @@
-const table_div = document.querySelector('div[class="table_information"]');
+// const table_div = document.querySelector('div[class="table_information"]');
+const table_div = document.querySelector('div[class="table-editable"]');
+const table = document.querySelector('table[class="table table-bordered table-responsive-md table-striped text-center"]');
 const errorMessage = document.querySelector('p[class="user_error fw-bold text-danger shake animated"]');
 
 // Authentication
@@ -17,13 +19,78 @@ const displayError = (message) => {
 }
 
 /**
+ * Handles an edit made to the table and sends a PUT request to the API.
+ * @param e
+ */
+const onEditUser = (e) => {
+    // Get the user id from the row that this button is in
+    const userId = e.target.parentElement.parentElement.id;
+
+    // Get the user data
+    const user = getUser(userId);
+
+    // Add the user to the edit table
+    addUserToEditTable(table, user);
+}
+
+/**
+ * Visually remove the user from the table.
+ * @param table
+ * @param userId
+ */
+removeUserFromTable = (table, userId) => {
+    // Remove the row with the user id from the table
+    const row = table.querySelector(`tr[id="${userId}"]`);
+    row.remove();
+}
+
+/**
+ * Handles the onClick event of the Remove User button to send a DELETE request to the API.
+ * @param e
+ */
+onRemoveUser = (e) => {
+    // Get the user id from the row that this button is in
+    const userId = e.parentElement.parentElement.id;
+
+
+
+    // Send a DELETE request to the API
+    const url = `http://localhost:8080/api/v1/user/${userId}`;
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'Authorization': auth_token
+        }
+    }
+    fetch(url, options)
+        .then(response => {
+            if(response.status === 204) {
+                // Remove the user from the table
+                removeUserFromTable(table, userId);
+
+                // Intentionally display an error to slow the user down
+                displayError("User removed");
+            } else {
+                displayError("Error removing user");
+            }
+        }).catch(error => {
+            displayError("Error removing user");
+        });
+}
+
+/**
  * Helper method to add a user to the search table.
  * @param table - The table to add the user to.
  * @param user - The user to add.
  */
-const addUserToTable = (table, user) => {
+const addUserToTable = (tbody, user) => {
     // Define the cells
-    const row = table.insertRow();
+    const row = tbody.insertRow();
+
+    // Add the user id to the row
+    row.id = user.id;
+
+    // Add the user information to the row
     const idCell = row.insertCell(0);
     const firstNameCell = row.insertCell(1);
     const lastNameCell = row.insertCell(2);
@@ -31,6 +98,13 @@ const addUserToTable = (table, user) => {
     const ageCell = row.insertCell(4);
     const emailCell = row.insertCell(5);
     const phoneCell = row.insertCell(6);
+    const removeCell = row.insertCell(7);
+
+    // For each td element in the row, add the contenteditable attribute
+    for (let i = 0; i < row.cells.length-1; i++) {
+        row.cells[i].contentEditable = true;
+        row.cells[i].className = "pt-3-half";
+    }
 
     // Add the data to the cells
     idCell.innerHTML = user.id;
@@ -46,6 +120,11 @@ const addUserToTable = (table, user) => {
     if(!!user.phoneNumber){
         phoneCell.innerHTML = user.phoneNumber[0]['number'];
     }
+
+    // Add the remove cell button that will remove the user from the table that includes the user id
+    removeCell.innerHTML = "<button class='btn btn-danger btn-sm' onclick='onRemoveUser(this)'>Remove</button>";
+    removeCell.className = "pt-3-half";
+    removeCell.id = user.id;
 }
 
 /**
@@ -63,7 +142,8 @@ function isArray(what) {
  * @param table - The table to add the header to.
  */
 const addTableHeader = (table) => {
-    const row = table.insertRow();
+    const header = table.createTHead();
+    const row = header.insertRow();
     const idCell = row.insertCell(0);
     const firstNameCell = row.insertCell(1);
     const lastNameCell = row.insertCell(2);
@@ -71,6 +151,7 @@ const addTableHeader = (table) => {
     const ageCell = row.insertCell(4);
     const emailCell = row.insertCell(5);
     const phoneCell = row.insertCell(6);
+    const removeCell = row.insertCell(7);
 
     idCell.innerHTML = "<b>ID</b>";
     firstNameCell.innerHTML = "<b>First Name</b>";
@@ -79,6 +160,7 @@ const addTableHeader = (table) => {
     ageCell.innerHTML = "<b>Age</b>";
     emailCell.innerHTML = "<b>Email</b>";
     phoneCell.innerHTML = "<b>Phone</b>";
+    removeCell.innerHTML = "<b>Remove</b>";
 }
 
 /**
@@ -97,19 +179,20 @@ const addUserDataToTable = (users) => {
 
 
     // Clear table if there are users
-    const table = document.querySelector('table[class="table table-hover table-sm table-bordered"]');
+    // const table = document.querySelector('table[class="table table-hover table-sm table-bordered"]');
     table.innerHTML = "";
     addTableHeader(table);
+    const tbody = table.createTBody();
 
     // Add users to table
     const usersResult = JSON.parse(users);
     if(isArray(usersResult)) {
         usersResult.forEach(user => {
-            addUserToTable(table, user);
+            addUserToTable(tbody, user);
         });
     } else {
         // For single user
-        addUserToTable(table, usersResult);
+        addUserToTable(tbody, usersResult);
     }
 }
 
@@ -173,62 +256,12 @@ const onSearchUser = (e) => {
 }
 
 /**
- *
- * @param {string} url  - The URL to fetch.
- * @param {string} data - The json information
- * @returns
- */
-const postData = async (url = '', data = {}) => {
-    const fetchOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        mode: 'cors',
-        body: data
-    };
-
-    const response = await fetch(url, fetchOptions);
-    return response.status;
-}
-
-/**
  * Handles the onClick event of the Add User button to send a POST request to the API.
  * @param {Event} e
  */
 const onAddUser = (e) => {
     e.preventDefault();
-
     window.open("AddUser.html", "Add User", "width=500,height=500");
-
-    // alert("Adding user");
-
-
-    // const textArea = document.forms[0].querySelector('textarea[class="form-control"]')
-    // let data = textArea.value;
-    // console.log("Data: ", data);
-
-
-    // const apiUrl = 'http://localhost:8080/api/v1/user/';
-    //
-    //
-    // /**
-    //  * Fetches the user from the API.
-    //  */
-    // const fetchData = async () => {
-    //     const response = await postData(apiUrl, data);
-    //     const code = response;
-    //
-    //     if (code === 201) {
-    //         // const user = await response.json();
-    //         // console.log("We got a response: ", user);
-    //         textArea.value = "Successfully added user";
-    //     } else {
-    //         console.log("We got a response: ", code);
-    //         textArea.value = "Failed to add user";
-    //     }
-    // }
-    // fetchData();
 }
 
 /**
@@ -244,7 +277,7 @@ const onLoad = () => {
     table_div.style.display = "none";
     errorMessage.style.display = "none";
 
-    const table = document.querySelector('table[class="table table-striped"]');
+    // const table = document.querySelector('table[class="table table-striped"]');
 }
 
 onLoad();

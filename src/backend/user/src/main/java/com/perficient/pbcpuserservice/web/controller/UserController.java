@@ -1,5 +1,6 @@
 package com.perficient.pbcpuserservice.web.controller;
 
+import com.perficient.pbcpuserservice.domain.EmailAddress;
 import com.perficient.pbcpuserservice.model.UserDto;
 import com.perficient.pbcpuserservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.*;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author tyler.barton
@@ -25,7 +29,7 @@ public class UserController {
     private UserService userService;
 
     /**
-     * Get a user by id
+     * Get a user by name
      *
      * @param name Either the first, last or full name of the user.
      * @return the user and 200 (OK) if found, else 404 (NOT FOUND)
@@ -116,13 +120,42 @@ public class UserController {
     }
 
     /**
+     * Create a validator for internal object validation
+     * @return
+     */
+    public static Validator createValidator() {
+        Configuration<?> config = Validation.byDefaultProvider().configure();
+        ValidatorFactory factory = config.buildValidatorFactory();
+        Validator validator = factory.getValidator();
+        factory.close();
+        return validator;
+    }
+
+    /**
+     * Validate a userdto object - more specifically, validate the email addresses and phone numbers
+     * @param object the object to validate
+     */
+    public static void Validate(Object object) {
+        Validator validator = createValidator();
+        Set<ConstraintViolation<Object>> violations = validator.validate(object);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+    }
+
+    /**
      * Create a new user
      * @param userDto the user information
      * @return a 201 (CREATED) status if successful else 400 (Bad Request)
      */
     @PostMapping(consumes={"application/json"})
-    public ResponseEntity createUser(@Validated @RequestBody UserDto userDto) {
+    public ResponseEntity createUser(@Valid @RequestBody UserDto userDto) {
+        // Validate objects inside the dto
+        Validate(userDto);
+
+        // Act
         UserDto savedDto = userService.createNewUser(userDto);
+
         if (savedDto == null) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }

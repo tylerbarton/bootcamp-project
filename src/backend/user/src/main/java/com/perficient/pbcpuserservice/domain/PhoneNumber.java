@@ -19,7 +19,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PhoneNumber implements Serializable {
-    public static final String PHONE_NUMBER_REGEX = "^[0-9]{3}-[0-9]{3}-[0-9]{4}$";
+    public static final String PHONE_NUMBER_REGEX = "^[0-9]{3}-[0-9]{3}-[0-9]{4}$|^$";
 
     @Pattern(regexp = PHONE_NUMBER_REGEX)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
