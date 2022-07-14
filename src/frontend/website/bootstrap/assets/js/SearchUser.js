@@ -24,13 +24,52 @@ const displayError = (message) => {
  */
 const onEditUser = (e) => {
     // Get the user id from the row that this button is in
-    const userId = e.target.parentElement.parentElement.id;
+    const userId = e.target.parentElement.id;
+    const row = table.querySelector(`tr[id="${userId}"]`);
 
-    // Get the user data
-    const user = getUser(userId);
+    // Get the user information from the row
+    const firstName = row.cells[1].innerHTML;
+    const lastName = row.cells[2].innerHTML;
+    const gender = row.cells[3].innerHTML;
+    const age = row.cells[4].innerHTML;
+    const email = row.cells[5].innerHTML;
+    const phone = row.cells[6].innerHTML;
 
-    // Add the user to the edit table
-    addUserToEditTable(table, user);
+    // Generate the object to PUT
+    const body = {
+        firstName: firstName,
+        lastName: lastName,
+        age: age,
+        gender: gender,
+        emailAddress: Array({
+            address: email.toString(),
+            type: "home"
+        }),
+        phoneNumber: Array({
+            number: phone.toString(),
+            type: "home"
+        })
+    }
+
+    // Update the user with a PUT request
+    const url = `http://localhost:8080/api/v1/user/${userId}`;
+    const options = {
+        method: 'PUT',
+        headers: {
+            'Authorization': auth_token,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    }
+
+    fetch(url, options)
+        .then(response => {
+            if(response.status === 204) {
+                // OK
+            } else {
+                displayError("Error updating user");
+            }
+        });
 }
 
 /**
@@ -119,6 +158,11 @@ const addUserToTable = (tbody, user) => {
     }
     if(!!user.phoneNumber){
         phoneCell.innerHTML = user.phoneNumber[0]['number'];
+    }
+
+    // Hook the cells to the onEditUser function
+    for (let i = 0; i < row.cells.length-1; i++) {
+        row.cells[i].addEventListener('input', onEditUser);
     }
 
     // Add the remove cell button that will remove the user from the table that includes the user id
